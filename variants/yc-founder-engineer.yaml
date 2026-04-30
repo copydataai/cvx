@@ -1,0 +1,17 @@
+target: YC founder engineer
+max_pages: 1
+tone: direct, technical, founder-oriented
+section_order:
+  - summary
+  - experience
+  - projects
+  - skills
+  - education
+include_projects: []
+exclude_projects: []
+emphasis_keywords:
+  - systems
+  - product
+  - AI
+  - operations
+  - infrastructure

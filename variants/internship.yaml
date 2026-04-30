@@ -1,0 +1,17 @@
+target: software engineering internship
+max_pages: 1
+tone: clear, evidence-driven, growth-oriented
+section_order:
+  - summary
+  - education
+  - projects
+  - skills
+  - experience
+include_projects: []
+exclude_projects: []
+emphasis_keywords:
+  - fundamentals
+  - coursework
+  - projects
+  - GitHub
+  - reliability

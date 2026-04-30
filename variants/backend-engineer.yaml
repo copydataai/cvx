@@ -1,0 +1,17 @@
+target: backend engineer
+max_pages: 1
+tone: precise, systems-oriented, pragmatic
+section_order:
+  - summary
+  - skills
+  - experience
+  - projects
+  - education
+include_projects: []
+exclude_projects: []
+emphasis_keywords:
+  - APIs
+  - databases
+  - reliability
+  - observability
+  - infrastructure
