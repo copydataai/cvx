@@ -3,9 +3,15 @@ package cv
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"gopkg.in/yaml.v3"
+)
+
+var (
+	currencyMetricPattern   = regexp.MustCompile(`(?i)(?:[$€£]\s*\d|\d+(?:[.,]\d+)?\s*(?:k|m|b)?\s*(?:usd|eur|gbp|dollars|euros|pounds))`)
+	multiplierMetricPattern = regexp.MustCompile(`(?i)\b\d+(?:[.,]\d+)?x\b`)
 )
 
 var validSections = map[string]bool{
@@ -145,12 +151,43 @@ func containsSuspiciousMetric(bullet string) bool {
 	if strings.Contains(bullet, "%") {
 		return true
 	}
-	for _, r := range bullet {
-		if r >= '0' && r <= '9' {
+	if currencyMetricPattern.MatchString(bullet) || multiplierMetricPattern.MatchString(bullet) {
+		return true
+	}
+
+	words := strings.Fields(bullet)
+	for i := 0; i < len(words)-1; i++ {
+		if isNumberToken(words[i]) && isImpactWord(words[i+1]) {
 			return true
 		}
 	}
 	return false
+}
+
+func isNumberToken(word string) bool {
+	word = strings.Trim(word, ".,;:()[]{}")
+	if word == "" {
+		return false
+	}
+	for _, r := range word {
+		if (r < '0' || r > '9') && r != ',' && r != '.' {
+			return false
+		}
+	}
+	return true
+}
+
+func isImpactWord(word string) bool {
+	word = strings.ToLower(strings.Trim(word, ".,;:()[]{}"))
+	switch word {
+	case "arr", "bookings", "churn", "conversion", "conversions", "cost", "costs",
+		"customers", "deals", "expenses", "funding", "growth", "hires", "leads",
+		"mrr", "pipeline", "profit", "profits", "revenue", "sales", "savings",
+		"signups", "subscriptions", "tickets", "users":
+		return true
+	default:
+		return false
+	}
 }
 
 func ValidateVariant(v *Variant) []string {

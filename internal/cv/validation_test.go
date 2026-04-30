@@ -50,6 +50,7 @@ func TestWarningsDetectAgentRelevantIssues(t *testing.T) {
 					duplicateBullet,
 					"Improved conversion by 40%.",
 					"[Sourced] Reduced support tickets by 20%.",
+					"Built services with Go 1.22, API v2, and iOS 17 support.",
 				},
 			},
 		},
@@ -68,6 +69,7 @@ func TestWarningsDetectAgentRelevantIssues(t *testing.T) {
 	assertWarning(t, warnings, "duplicate_bullet", "projects[0].bullets[0]", "experience[0].bullets[1]")
 	assertWarning(t, warnings, "suspicious_metric", "experience[0].bullets[2]", "")
 	assertNoWarning(t, warnings, "suspicious_metric", "experience[0].bullets[3]")
+	assertNoWarning(t, warnings, "suspicious_metric", "experience[0].bullets[4]")
 }
 
 func TestWarningsDetectLongBullets(t *testing.T) {
