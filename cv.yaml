@@ -1,0 +1,34 @@
+name: Your Name
+contact:
+  email: you@example.com
+  phone: ""
+  location: City, Country
+links:
+  - label: GitHub
+    url: https://github.com/yourname
+summary: >
+  Short factual professional summary. Do not include claims that are not supported by source data.
+skills:
+  - Go
+  - Linux
+experience:
+  - company: Example Company
+    title: Software Engineer
+    location: Remote
+    start: "2024"
+    end: Present
+    bullets:
+      - Built and maintained backend services for internal users.
+projects:
+  - name: cvx
+    description: Agent-native CV system.
+    url: ""
+    bullets:
+      - Created structured YAML workflows for rendering CVs.
+education:
+  - institution: Example University
+    degree: Example Degree
+    start: "2020"
+    end: "2024"
+metadata:
+  updated: "2026-04-30"

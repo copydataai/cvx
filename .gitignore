@@ -1,0 +1,6 @@
+# Generated cvx artifacts
+output/
+.cvx/
+
+# Local build outputs
+/cvx
