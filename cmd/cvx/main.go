@@ -6,6 +6,7 @@ import (
 
 	"github.com/josesanchez/cvx/internal/cv"
 	"github.com/josesanchez/cvx/internal/render"
+	"github.com/josesanchez/cvx/internal/schema"
 )
 
 func main() {
@@ -28,6 +29,13 @@ func run(args []string) error {
 		return cv.LintCommand(args[1:])
 	case "render":
 		return render.Command(args[1:])
+	case "schema":
+		if err := schema.WriteSchemas("schema"); err != nil {
+			return err
+		}
+		fmt.Println("schema/cv.schema.json")
+		fmt.Println("schema/variant.schema.json")
+		return nil
 	case "help", "--help", "-h":
 		usage()
 		return nil
@@ -43,5 +51,6 @@ Usage:
   cvx init
   cvx lint [--input cv.yaml] [--variant variants/name.yaml]
   cvx render [--input cv.yaml] [--variant variants/name.yaml] [--output output/cv.tex]
+  cvx schema
 `)
 }
