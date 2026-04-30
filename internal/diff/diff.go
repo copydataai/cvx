@@ -265,41 +265,60 @@ func groupByKey(groups []bulletGroup) map[string]bulletGroup {
 
 func bulletChanges(from, to []string) []string {
 	var changes []string
-	if len(from) == len(to) {
-		for i := range from {
-			if from[i] == to[i] {
-				continue
-			}
-			if relatedBullets(from[i], to[i]) {
-				changes = append(changes,
-					"- Changed wording\n"+
-						fmt.Sprintf("  - Old bullet: %s\n", from[i])+
-						fmt.Sprintf("  - New bullet: %s\n", to[i]),
-				)
-				continue
-			}
-			changes = append(changes, fmt.Sprintf("- Removed bullet: %s\n", from[i]))
-			changes = append(changes, fmt.Sprintf("- Added bullet: %s\n", to[i]))
-		}
-		return changes
-	}
+	unmatchedFrom, unmatchedTo := unmatchedBullets(from, to)
 
-	oldCounts := countBullets(from)
-	newCounts := countBullets(to)
-	for _, bullet := range from {
-		if oldCounts[bullet] > newCounts[bullet] {
-			changes = append(changes, removedBulletChange(bullet))
-			oldCounts[bullet]--
+	usedTo := make([]bool, len(unmatchedTo))
+	for _, oldBullet := range unmatchedFrom {
+		match := -1
+		for j, newBullet := range unmatchedTo {
+			if usedTo[j] {
+				continue
+			}
+			if relatedBullets(oldBullet, newBullet) {
+				match = j
+				break
+			}
 		}
+		if match == -1 {
+			changes = append(changes, removedBulletChange(oldBullet))
+			continue
+		}
+		usedTo[match] = true
+		changes = append(changes,
+			"- Changed wording\n"+
+				fmt.Sprintf("  - Old bullet: %s\n", oldBullet)+
+				fmt.Sprintf("  - New bullet: %s\n", unmatchedTo[match]),
+		)
 	}
-	oldCounts = countBullets(from)
-	for _, bullet := range to {
-		if newCounts[bullet] > oldCounts[bullet] {
-			changes = append(changes, addedBulletChange(bullet))
-			newCounts[bullet]--
+	for j, newBullet := range unmatchedTo {
+		if !usedTo[j] {
+			changes = append(changes, addedBulletChange(newBullet))
 		}
 	}
 	return changes
+}
+
+func unmatchedBullets(from, to []string) ([]string, []string) {
+	toCounts := countBullets(to)
+	unmatchedFrom := make([]string, 0, len(from))
+	for _, bullet := range from {
+		if toCounts[bullet] > 0 {
+			toCounts[bullet]--
+			continue
+		}
+		unmatchedFrom = append(unmatchedFrom, bullet)
+	}
+
+	fromCounts := countBullets(from)
+	unmatchedTo := make([]string, 0, len(to))
+	for _, bullet := range to {
+		if fromCounts[bullet] > 0 {
+			fromCounts[bullet]--
+			continue
+		}
+		unmatchedTo = append(unmatchedTo, bullet)
+	}
+	return unmatchedFrom, unmatchedTo
 }
 
 func removedBulletChanges(bullets []string) []string {

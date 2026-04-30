@@ -153,6 +153,37 @@ func TestMarkdownIgnoresSharedGenericActionVerbForWordingChanges(t *testing.T) {
 	assertNotContains(t, report, "Changed wording")
 }
 
+func TestMarkdownDoesNotReportShiftedUnchangedBullets(t *testing.T) {
+	from := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Built scheduling workflows.",
+					"Maintained API services.",
+				},
+			},
+		},
+	}
+	to := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Created invoice exports.",
+					"Built scheduling workflows.",
+				},
+			},
+		},
+	}
+
+	report := Markdown(from, to)
+	assertContains(t, report, "Removed bullet: Maintained API services.")
+	assertContains(t, report, "Added bullet: Created invoice exports.")
+	assertNotContains(t, report, "Removed bullet: Built scheduling workflows.")
+	assertNotContains(t, report, "Added bullet: Built scheduling workflows.")
+}
+
 func TestMarkdownPreservesDuplicateProjectGroups(t *testing.T) {
 	from := &cv.CV{
 		Projects: []cv.Project{
