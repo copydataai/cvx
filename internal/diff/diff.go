@@ -135,6 +135,7 @@ type bulletGroup struct {
 
 func experienceGroups(items []cv.Experience) []bulletGroup {
 	groups := make([]bulletGroup, 0, len(items))
+	seen := map[string]int{}
 	for i, item := range items {
 		label := item.Company
 		if label == "" {
@@ -143,8 +144,13 @@ func experienceGroups(items []cv.Experience) []bulletGroup {
 		if item.Title != "" {
 			label = label + " - " + item.Title
 		}
+		key := stableKey(item.Title + " " + item.Company)
+		if key == "" {
+			key = stableKey(label)
+		}
+		key, label = occurrenceKeyAndLabel(key, label, seen)
 		groups = append(groups, bulletGroup{
-			key:     stableKey(item.Title + " " + item.Company),
+			key:     key,
 			label:   label,
 			bullets: item.Bullets,
 		})
@@ -154,18 +160,33 @@ func experienceGroups(items []cv.Experience) []bulletGroup {
 
 func projectGroups(items []cv.Project) []bulletGroup {
 	groups := make([]bulletGroup, 0, len(items))
+	seen := map[string]int{}
 	for i, item := range items {
 		label := item.Name
 		if label == "" {
 			label = fmt.Sprintf("Project %d", i+1)
 		}
+		key := stableKey(item.Name)
+		if key == "" {
+			key = stableKey(label)
+		}
+		key, label = occurrenceKeyAndLabel(key, label, seen)
 		groups = append(groups, bulletGroup{
-			key:     stableKey(item.Name),
+			key:     key,
 			label:   label,
 			bullets: item.Bullets,
 		})
 	}
 	return groups
+}
+
+func occurrenceKeyAndLabel(key, label string, seen map[string]int) (string, string) {
+	seen[key]++
+	occurrence := seen[key]
+	if occurrence == 1 {
+		return key, label
+	}
+	return fmt.Sprintf("%s #%d", key, occurrence), fmt.Sprintf("%s #%d", label, occurrence)
 }
 
 func writeBulletGroups(b *strings.Builder, from, to []bulletGroup) {

@@ -125,6 +125,47 @@ func TestMarkdownReportsUnrelatedSameLengthBulletChangeAsRemovedAndAdded(t *test
 	assertNotContains(t, report, "Changed wording")
 }
 
+func TestMarkdownPreservesDuplicateProjectGroups(t *testing.T) {
+	from := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Kept first duplicate project bullet.",
+				},
+			},
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Retired legacy scheduler.",
+				},
+			},
+		},
+	}
+	to := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Kept first duplicate project bullet.",
+				},
+			},
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Created invoice exports.",
+				},
+			},
+		},
+	}
+
+	report := Markdown(from, to)
+	assertContains(t, report, "### Ops Tool #2")
+	assertContains(t, report, "Removed bullet: Retired legacy scheduler.")
+	assertContains(t, report, "Added bullet: Created invoice exports.")
+	assertNotContains(t, report, "Removed bullet: Kept first duplicate project bullet.")
+}
+
 func assertContains(t *testing.T, got, want string) {
 	t.Helper()
 	if !strings.Contains(got, want) {
