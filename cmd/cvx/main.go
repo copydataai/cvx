@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/josesanchez/cvx/internal/cv"
+	"github.com/josesanchez/cvx/internal/diff"
 	"github.com/josesanchez/cvx/internal/render"
 	"github.com/josesanchez/cvx/internal/schema"
 )
@@ -29,6 +30,8 @@ func run(args []string) error {
 		return cv.LintCommand(args[1:])
 	case "render":
 		return render.Command(args[1:])
+	case "diff":
+		return diff.Command(args[1:])
 	case "schema":
 		return schemaCommand(args[1:])
 	case "help", "--help", "-h":
@@ -63,6 +66,7 @@ Usage:
   cvx init
   cvx lint [--input cv.yaml] [--variant variants/name.yaml]
   cvx render [--input cv.yaml] [--variant variants/name.yaml] [--output output/cv.tex]
+  cvx diff --from output/previous.json --to output/current.json
   cvx schema
 `)
 }
