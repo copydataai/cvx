@@ -66,3 +66,75 @@ func TestMarkdownReportsAddedRemovedAndChangedBullets(t *testing.T) {
 		}
 	}
 }
+
+func TestMarkdownReportsProjectReplacementAtSameIndexAsRemovedAndAdded(t *testing.T) {
+	from := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Old Project",
+				Bullets: []string{
+					"Built legacy dispatch workflows.",
+				},
+			},
+		},
+	}
+	to := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "New Project",
+				Bullets: []string{
+					"Created invoice review tools.",
+				},
+			},
+		},
+	}
+
+	report := Markdown(from, to)
+	assertContains(t, report, "### Old Project")
+	assertContains(t, report, "Removed bullet: Built legacy dispatch workflows.")
+	assertContains(t, report, "### New Project")
+	assertContains(t, report, "Added bullet: Created invoice review tools.")
+	assertNotContains(t, report, "Changed wording")
+}
+
+func TestMarkdownReportsUnrelatedSameLengthBulletChangeAsRemovedAndAdded(t *testing.T) {
+	from := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Built scheduling workflows.",
+				},
+			},
+		},
+	}
+	to := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Created invoice exports.",
+				},
+			},
+		},
+	}
+
+	report := Markdown(from, to)
+	assertContains(t, report, "Removed bullet: Built scheduling workflows.")
+	assertContains(t, report, "Added bullet: Created invoice exports.")
+	assertNotContains(t, report, "Changed wording")
+}
+
+func assertContains(t *testing.T, got, want string) {
+	t.Helper()
+	if !strings.Contains(got, want) {
+		t.Fatalf("expected report to contain %q; report:\n%s", want, got)
+	}
+}
+
+func assertNotContains(t *testing.T, got, want string) {
+	t.Helper()
+	if strings.Contains(got, want) {
+		t.Fatalf("expected report not to contain %q; report:\n%s", want, got)
+	}
+}
