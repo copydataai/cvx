@@ -28,9 +28,9 @@ func Command(args []string) error {
 	if err != nil {
 		return err
 	}
-	warnings := reportWarnings(cv.Warnings(doc))
-	renderReport := newRenderReport(*input, *output, *variantPath, sections, warnings)
+	renderReport := newRenderReport(*input, *output, *variantPath, sections, nil)
 	if errs := cv.Validate(doc); len(errs) > 0 {
+		renderReport.Warnings = reportWarnings(cv.Warnings(doc))
 		renderReport.Validation = report.ValidationResult{Success: false, Errors: errs}
 		if err := report.WriteRenderReport(*reportPath, renderReport); err != nil {
 			return fmt.Errorf("write render report: %w", err)
@@ -45,6 +45,7 @@ func Command(args []string) error {
 		}
 		if errs := cv.ValidateVariant(variant); len(errs) > 0 {
 			renderReport.SectionOrder = append([]string(nil), variant.SectionOrder...)
+			renderReport.Warnings = reportWarnings(cv.Warnings(doc))
 			renderReport.Validation = report.ValidationResult{Success: false, Errors: errs}
 			if err := report.WriteRenderReport(*reportPath, renderReport); err != nil {
 				return fmt.Errorf("write render report: %w", err)
@@ -63,6 +64,7 @@ func Command(args []string) error {
 	if err := os.WriteFile(*output, []byte(body), 0o644); err != nil {
 		return err
 	}
+	renderReport.Warnings = reportWarnings(cv.Warnings(doc))
 	renderReport.Validation = report.ValidationResult{Success: true}
 	if err := report.WriteRenderReport(*reportPath, renderReport); err != nil {
 		return err

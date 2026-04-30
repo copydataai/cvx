@@ -104,3 +104,58 @@ projects:
 		t.Fatalf("unexpected section order: %#v", decoded.SectionOrder)
 	}
 }
+
+func TestCommandRenderReportWarningsUseFilteredVariantProjects(t *testing.T) {
+	dir := t.TempDir()
+	input := filepath.Join(dir, "cv.yaml")
+	variantPath := filepath.Join(dir, "variant.yaml")
+	output := filepath.Join(dir, "out", "cv.tex")
+	reportPath := filepath.Join(dir, "reports", "custom-render.json")
+	cvYAML := `name: Person
+contact:
+  email: person@example.com
+  location: Dublin
+summary: Builds developer tools.
+projects:
+  - name: Keep
+    description: Included project.
+    bullets:
+      - Built render workflows.
+  - name: Drop
+    description: Excluded project.
+    bullets:
+      - ""
+`
+	variantYAML := `target: backend engineer
+max_pages: 1
+section_order:
+  - summary
+  - projects
+exclude_projects:
+  - Drop
+`
+	if err := os.WriteFile(input, []byte(cvYAML), 0o644); err != nil {
+		t.Fatalf("WriteFile(input) error = %v", err)
+	}
+	if err := os.WriteFile(variantPath, []byte(variantYAML), 0o644); err != nil {
+		t.Fatalf("WriteFile(variant) error = %v", err)
+	}
+
+	if err := Command([]string{"--input", input, "--variant", variantPath, "--output", output, "--report", reportPath}); err != nil {
+		t.Fatalf("Command() error = %v", err)
+	}
+
+	data, err := os.ReadFile(reportPath)
+	if err != nil {
+		t.Fatalf("ReadFile() error = %v", err)
+	}
+	var decoded report.RenderReport
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatalf("json.Unmarshal() error = %v", err)
+	}
+	for _, warning := range decoded.Warnings {
+		if warning.Code == "empty_bullet" {
+			t.Fatalf("expected excluded project empty bullet warning to be filtered out, got %#v", decoded.Warnings)
+		}
+	}
+}
