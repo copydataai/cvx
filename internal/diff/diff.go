@@ -316,18 +316,33 @@ func relatedBullets(from, to string) bool {
 	}
 
 	shared := 0
+	sharedLongToken := false
 	for token := range fromTokens {
 		if toTokens[token] {
 			shared++
+			if len(token) >= 8 {
+				sharedLongToken = true
+			}
 		}
 	}
-	return shared >= 1
+	if shared >= 2 {
+		return true
+	}
+	return shared == 1 && sharedLongToken && similarTokenCount(fromTokens, toTokens)
+}
+
+func similarTokenCount(from, to map[string]bool) bool {
+	diff := len(from) - len(to)
+	if diff < 0 {
+		diff = -diff
+	}
+	return diff <= 2
 }
 
 func meaningfulTokens(text string) map[string]bool {
 	tokens := map[string]bool{}
 	for _, token := range wordPattern.FindAllString(strings.ToLower(text), -1) {
-		if len(token) < 3 || stopwords[token] {
+		if len(token) < 3 || stopwords[token] || genericActionVerbs[token] {
 			continue
 		}
 		tokens[token] = true
@@ -352,6 +367,21 @@ var stopwords = map[string]bool{
 	"this": true,
 	"that": true,
 	"with": true,
+}
+
+var genericActionVerbs = map[string]bool{
+	"build":       true,
+	"built":       true,
+	"create":      true,
+	"created":     true,
+	"developed":   true,
+	"implemented": true,
+	"improved":    true,
+	"led":         true,
+	"managed":     true,
+	"migrated":    true,
+	"owned":       true,
+	"supported":   true,
 }
 
 func countBullets(bullets []string) map[string]int {

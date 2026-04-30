@@ -125,6 +125,34 @@ func TestMarkdownReportsUnrelatedSameLengthBulletChangeAsRemovedAndAdded(t *test
 	assertNotContains(t, report, "Changed wording")
 }
 
+func TestMarkdownIgnoresSharedGenericActionVerbForWordingChanges(t *testing.T) {
+	from := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Built scheduling workflows.",
+				},
+			},
+		},
+	}
+	to := &cv.CV{
+		Projects: []cv.Project{
+			{
+				Name: "Ops Tool",
+				Bullets: []string{
+					"Built invoice exports.",
+				},
+			},
+		},
+	}
+
+	report := Markdown(from, to)
+	assertContains(t, report, "Removed bullet: Built scheduling workflows.")
+	assertContains(t, report, "Added bullet: Built invoice exports.")
+	assertNotContains(t, report, "Changed wording")
+}
+
 func TestMarkdownPreservesDuplicateProjectGroups(t *testing.T) {
 	from := &cv.CV{
 		Projects: []cv.Project{
