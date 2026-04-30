@@ -66,7 +66,7 @@ Usage:
   cvx init
   cvx lint [--input cv.yaml] [--variant variants/name.yaml]
   cvx render [--input cv.yaml] [--variant variants/name.yaml] [--output output/cv.tex]
-  cvx diff --from output/previous.json --to output/current.json
+  cvx diff --from output/previous.json --to output/current.json [--output output/reports/last-diff.md]
   cvx schema
 `)
 }

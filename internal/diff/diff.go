@@ -20,6 +20,11 @@ var wordPattern = regexp.MustCompile(`[a-z0-9]+`)
 
 // Command compares two CV-shaped JSON snapshots and writes a markdown report.
 func Command(args []string) error {
+	if len(args) == 1 && (args[0] == "--help" || args[0] == "-h") {
+		usage()
+		return nil
+	}
+
 	flags := flag.NewFlagSet("diff", flag.ContinueOnError)
 	flags.SetOutput(new(bytes.Buffer))
 
@@ -54,6 +59,19 @@ func Command(args []string) error {
 	}
 	fmt.Println(*outputPath)
 	return nil
+}
+
+func usage() {
+	fmt.Printf(`Usage:
+  cvx diff --from output/previous.json --to output/current.json [--output %s]
+
+Compares two CV-shaped JSON snapshots and writes a markdown report.
+
+Flags:
+  --from    Required. Previous CV JSON snapshot.
+  --to      Required. Current CV JSON snapshot.
+  --output  Markdown report path. Default: %s
+`, defaultOutput, defaultOutput)
 }
 
 func loadJSON(path string) (*cv.CV, error) {
