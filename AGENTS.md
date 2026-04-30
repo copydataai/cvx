@@ -62,11 +62,29 @@ cvx lint
 cvx render
 ```
 
+Rendering writes an audit report:
+
+```txt
+output/reports/last-render.json
+```
+
 If a variant is used:
 
 ```bash
 cvx lint --variant variants/yc-founder-engineer.yaml
 cvx render --variant variants/yc-founder-engineer.yaml
+```
+
+When comparing two CV snapshots:
+
+```bash
+cvx diff --from output/previous.json --to output/current.json
+```
+
+When editor or agent schema files are needed:
+
+```bash
+cvx schema
 ```
 
 ## Reporting format
@@ -81,6 +99,9 @@ Did not change:
 Validation:
 - cvx lint: pass/fail
 - cvx render: pass/fail
+- render report: pass/fail
+- cvx diff: pass/fail, if used
+- cvx schema: pass/fail, if used
 
 Notes:
 - ...
