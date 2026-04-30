@@ -23,6 +23,12 @@ type Link struct {
 	URL   string `yaml:"url"`
 }
 
+type Warning struct {
+	Code     string `json:"code"`
+	Message  string `json:"message"`
+	Location string `json:"location"`
+}
+
 type Experience struct {
 	Company  string   `yaml:"company"`
 	Title    string   `yaml:"title"`

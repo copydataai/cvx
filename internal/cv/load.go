@@ -50,6 +50,109 @@ func Validate(doc *CV) []string {
 	return errs
 }
 
+func Warnings(doc *CV) []Warning {
+	var warnings []Warning
+
+	for i, link := range doc.Links {
+		if strings.TrimSpace(link.URL) == "" {
+			warnings = append(warnings, Warning{
+				Code:     "missing_link",
+				Message:  "link URL is empty",
+				Location: fmt.Sprintf("links[%d]", i),
+			})
+		}
+	}
+
+	if len(doc.Skills) > 15 {
+		warnings = append(warnings, Warning{
+			Code:     "too_many_skills",
+			Message:  "more than 15 skills may reduce focus",
+			Location: "skills",
+		})
+	}
+
+	if len(doc.Projects) > 6 {
+		warnings = append(warnings, Warning{
+			Code:     "too_many_projects",
+			Message:  "more than 6 projects may reduce focus",
+			Location: "projects",
+		})
+	}
+
+	seenBullets := map[string]string{}
+	for i, exp := range doc.Experience {
+		for j, bullet := range exp.Bullets {
+			location := fmt.Sprintf("experience[%d].bullets[%d]", i, j)
+			warnings = append(warnings, bulletWarnings(bullet, location, seenBullets)...)
+		}
+	}
+	for i, project := range doc.Projects {
+		for j, bullet := range project.Bullets {
+			location := fmt.Sprintf("projects[%d].bullets[%d]", i, j)
+			warnings = append(warnings, bulletWarnings(bullet, location, seenBullets)...)
+		}
+	}
+
+	return warnings
+}
+
+func bulletWarnings(bullet, location string, seenBullets map[string]string) []Warning {
+	var warnings []Warning
+	trimmed := strings.TrimSpace(bullet)
+
+	if trimmed == "" {
+		warnings = append(warnings, Warning{
+			Code:     "empty_bullet",
+			Message:  "bullet is empty",
+			Location: location,
+		})
+		return warnings
+	}
+
+	if len(strings.Fields(trimmed)) > 45 {
+		warnings = append(warnings, Warning{
+			Code:     "long_bullet",
+			Message:  "bullet is over 45 words",
+			Location: location,
+		})
+	}
+
+	if firstLocation, ok := seenBullets[trimmed]; ok {
+		warnings = append(warnings, Warning{
+			Code:     "duplicate_bullet",
+			Message:  fmt.Sprintf("duplicate bullet also appears at %s", firstLocation),
+			Location: location,
+		})
+	} else {
+		seenBullets[trimmed] = location
+	}
+
+	if containsSuspiciousMetric(trimmed) {
+		warnings = append(warnings, Warning{
+			Code:     "suspicious_metric",
+			Message:  "bullet contains a metric without [Sourced] or [Verified]",
+			Location: location,
+		})
+	}
+
+	return warnings
+}
+
+func containsSuspiciousMetric(bullet string) bool {
+	if strings.Contains(bullet, "[Sourced]") || strings.Contains(bullet, "[Verified]") {
+		return false
+	}
+	if strings.Contains(bullet, "%") {
+		return true
+	}
+	for _, r := range bullet {
+		if r >= '0' && r <= '9' {
+			return true
+		}
+	}
+	return false
+}
+
 func ValidateVariant(v *Variant) []string {
 	var errs []string
 	if strings.TrimSpace(v.Target) == "" {
