@@ -30,18 +30,30 @@ func run(args []string) error {
 	case "render":
 		return render.Command(args[1:])
 	case "schema":
-		if err := schema.WriteSchemas("schema"); err != nil {
-			return err
-		}
-		fmt.Println("schema/cv.schema.json")
-		fmt.Println("schema/variant.schema.json")
-		return nil
+		return schemaCommand(args[1:])
 	case "help", "--help", "-h":
 		usage()
 		return nil
 	default:
 		return fmt.Errorf("unknown command %q", args[0])
 	}
+}
+
+func schemaCommand(args []string) error {
+	if len(args) > 0 {
+		if len(args) == 1 && (args[0] == "--help" || args[0] == "-h") {
+			schemaUsage()
+			return nil
+		}
+		return fmt.Errorf("schema: unknown argument %q", args[0])
+	}
+
+	if err := schema.WriteSchemas("schema"); err != nil {
+		return err
+	}
+	fmt.Println("schema/cv.schema.json")
+	fmt.Println("schema/variant.schema.json")
+	return nil
 }
 
 func usage() {
@@ -52,5 +64,15 @@ Usage:
   cvx lint [--input cv.yaml] [--variant variants/name.yaml]
   cvx render [--input cv.yaml] [--variant variants/name.yaml] [--output output/cv.tex]
   cvx schema
+`)
+}
+
+func schemaUsage() {
+	fmt.Print(`Usage:
+  cvx schema
+
+Writes static JSON Schema files to:
+  schema/cv.schema.json
+  schema/variant.schema.json
 `)
 }
