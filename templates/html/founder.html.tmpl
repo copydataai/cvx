@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Name }} Founder Engineer CV</title>
+  <style>
+    :root {
+      --ink: #101820;
+      --accent: #d45113;
+      --field: #f4eadb;
+      --line: #1f2f3a;
+    }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(212, 81, 19, 0.18), transparent 28%),
+        linear-gradient(135deg, #fffaf1 0%, #f7efe2 100%);
+      font-family: "Avenir Next", Avenir, Montserrat, sans-serif;
+    }
+    main {
+      max-width: 920px;
+      margin: 40px auto;
+      padding: 34px;
+      background: rgba(255, 253, 248, 0.82);
+      border: 1px solid rgba(31, 47, 58, 0.18);
+      box-shadow: 0 24px 70px rgba(16, 24, 32, 0.12);
+    }
+    header {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      border-bottom: 3px solid var(--line);
+      padding-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.86;
+      letter-spacing: -0.08em;
+    }
+    .signal {
+      align-self: end;
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+    }
+    h2 {
+      margin: 30px 0 12px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    .card {
+      background: var(--field);
+      padding: 18px;
+      border-left: 5px solid var(--accent);
+    }
+    .title {
+      font-weight: 800;
+    }
+    .date {
+      color: rgba(16, 24, 32, 0.62);
+      font-size: 13px;
+    }
+    li {
+      margin: 7px 0;
+    }
+    @media (max-width: 720px) {
+      header, .grid {
+        grid-template-columns: 1fr;
+      }
+      main {
+        margin: 0;
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>{{ .Name }}</h1>
+        <p>{{ .Summary }}</p>
+      </div>
+      <div class="signal">Product judgment · systems execution · operational context</div>
+    </header>
+
+    <section>
+      <h2>Experience</h2>
+      {{ range .Experience }}
+      <article class="card">
+        <div class="title">{{ .Title }} · {{ .Company }}</div>
+        <div class="date">{{ .Start }}–{{ .End }}</div>
+        <ul>{{ range .Bullets }}<li>{{ . }}</li>{{ end }}</ul>
+      </article>
+      {{ end }}
+    </section>
+
+    <section>
+      <h2>Selected Builds</h2>
+      <div class="grid">
+        {{ range .Projects }}
+        <article class="card">
+          <div class="title">{{ .Name }}</div>
+          <p>{{ .Description }}</p>
+          <ul>{{ range .Bullets }}<li>{{ . }}</li>{{ end }}</ul>
+        </article>
+        {{ end }}
+      </div>
+    </section>
+  </main>
+</body>
+</html>

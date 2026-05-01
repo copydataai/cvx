@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Name }} CV</title>
+  <style>
+    :root {
+      --ink: #161616;
+      --muted: #606060;
+      --rule: #d8d3c7;
+      --paper: #fffdf8;
+    }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+      line-height: 1.45;
+    }
+    main {
+      max-width: 760px;
+      margin: 48px auto;
+      padding: 0 28px;
+    }
+    header {
+      border-bottom: 2px solid var(--rule);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      letter-spacing: -0.04em;
+    }
+    .contact, .meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin: 28px 0 10px;
+    }
+    .item {
+      margin: 0 0 18px;
+    }
+    .item-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-weight: 700;
+    }
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>{{ .Name }}</h1>
+      <div class="contact">{{ .Contact.Email }} · {{ .Contact.Location }}</div>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p>{{ .Summary }}</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      {{ range .Experience }}
+      <article class="item">
+        <div class="item-title"><span>{{ .Title }}, {{ .Company }}</span><span>{{ .Start }}–{{ .End }}</span></div>
+        <ul>{{ range .Bullets }}<li>{{ . }}</li>{{ end }}</ul>
+      </article>
+      {{ end }}
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      {{ range .Projects }}
+      <article class="item">
+        <div class="item-title"><span>{{ .Name }}</span></div>
+        <p class="meta">{{ .Description }}</p>
+        <ul>{{ range .Bullets }}<li>{{ . }}</li>{{ end }}</ul>
+      </article>
+      {{ end }}
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <p>{{ range $i, $skill := .Skills }}{{ if $i }}, {{ end }}{{ $skill }}{{ end }}</p>
+    </section>
+  </main>
+</body>
+</html>
