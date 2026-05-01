@@ -20,6 +20,7 @@ Prefer:
 cv.yaml
 variants/*.yaml
 prompts/*.md
+skills/cvx/SKILL.md
 ```
 
 Avoid editing generated TeX unless the task is explicitly visual/layout-related.
@@ -81,6 +82,12 @@ When comparing two CV snapshots:
 cvx diff --from output/previous.json --to output/current.json
 ```
 
+To create snapshots for diffing:
+
+```bash
+cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
+```
+
 When editor or agent schema files are needed:
 
 ```bash
@@ -125,7 +132,9 @@ If something is unclear, do not guess. Use one of:
 cv.yaml
 variants/*.yaml
 prompts/*.md
+skills/cvx/SKILL.md
 templates/**/*.tex.njk
+templates/html/*.tmpl
 internal/**
 cmd/**
 README.md
