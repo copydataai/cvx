@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/josesanchez/cvx/internal/check"
 	"github.com/josesanchez/cvx/internal/cv"
 	"github.com/josesanchez/cvx/internal/diff"
 	"github.com/josesanchez/cvx/internal/normalize"
@@ -27,6 +28,8 @@ func run(args []string) error {
 	switch args[0] {
 	case "init":
 		return cv.WriteStarterFiles(".")
+	case "check":
+		return check.Command(args[1:])
 	case "lint":
 		return cv.LintCommand(args[1:])
 	case "render":
@@ -67,6 +70,7 @@ func usage() {
 
 Usage:
   cvx init
+  cvx check [--input cv.yaml] [--variant variants/name.yaml]
   cvx lint [--input cv.yaml] [--variant variants/name.yaml]
   cvx render [--input cv.yaml] [--variant variants/name.yaml] [--output output/cv.tex]
   cvx normalize [--input cv.yaml] [--variant variants/name.yaml] [--output output/current.json]
