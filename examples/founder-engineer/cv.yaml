@@ -1,0 +1,50 @@
+name: Alex Rivera
+contact:
+  email: alex@example.com
+  location: Dublin, Ireland
+links:
+  - label: GitHub
+    url: https://github.com/alexrivera
+  - label: Portfolio
+    url: https://example.com
+summary: >
+  Founder-minded software engineer building local-first operations tools for service businesses.
+skills:
+  - Go
+  - PostgreSQL
+  - TypeScript
+  - Linux
+  - Docker
+experience:
+  - company: CleanOps Studio
+    title: Founder Engineer
+    location: Dublin, Ireland
+    start: "2024"
+    end: Present
+    bullets:
+      - text: Built scheduling and job tracking workflows for cleaning operators.
+        source: human
+        verified: true
+      - text: Interviewed operators to map quoting, dispatch, and invoicing pain points.
+        source: human
+        verified: true
+projects:
+  - name: Routeboard
+    description: Local-first dispatch board for field service teams.
+    bullets:
+      - text: Implemented drag-and-drop job planning with offline-safe state sync.
+        source: human
+        verified: true
+  - name: Invoice Parser
+    description: Tooling for extracting line items from supplier invoices.
+    bullets:
+      - text: Created review workflows for correcting extracted invoice data before export.
+        source: human
+        verified: true
+education:
+  - institution: Example University
+    degree: BSc Computer Science
+    start: "2020"
+    end: "2024"
+metadata:
+  updated: "2026-05-01"
