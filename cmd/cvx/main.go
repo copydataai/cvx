@@ -8,8 +8,10 @@ import (
 	"github.com/josesanchez/cvx/internal/cv"
 	"github.com/josesanchez/cvx/internal/diff"
 	"github.com/josesanchez/cvx/internal/normalize"
+	"github.com/josesanchez/cvx/internal/preview"
 	"github.com/josesanchez/cvx/internal/prompt"
 	"github.com/josesanchez/cvx/internal/render"
+	"github.com/josesanchez/cvx/internal/review"
 	"github.com/josesanchez/cvx/internal/schema"
 )
 
@@ -43,6 +45,10 @@ func run(args []string) error {
 		return diff.Command(args[1:])
 	case "prompt":
 		return prompt.Command(args[1:])
+	case "preview":
+		return preview.Command(args[1:])
+	case "review":
+		return review.Command(args[1:])
 	case "schema":
 		return schemaCommand(args[1:])
 	case "version":
@@ -85,6 +91,8 @@ Usage:
   cvx normalize [--input cv.yaml] [--variant variants/name.yaml] [--output output/current.json]
   cvx diff --from output/previous.json --to output/current.json [--output output/reports/last-diff.md]
   cvx prompt list|<name>
+  cvx preview [--addr 127.0.0.1:4321] [--variant variants/name.yaml]
+  cvx review facts|bullets|ats|target [--variant variants/name.yaml]
   cvx schema
   cvx version
 `)
