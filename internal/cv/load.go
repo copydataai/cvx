@@ -89,13 +89,13 @@ func Warnings(doc *CV) []Warning {
 	for i, exp := range doc.Experience {
 		for j, bullet := range exp.Bullets {
 			location := fmt.Sprintf("experience[%d].bullets[%d]", i, j)
-			warnings = append(warnings, bulletWarnings(bullet, location, seenBullets)...)
+			warnings = append(warnings, bulletWarnings(bullet.Text, location, seenBullets)...)
 		}
 	}
 	for i, project := range doc.Projects {
 		for j, bullet := range project.Bullets {
 			location := fmt.Sprintf("projects[%d].bullets[%d]", i, j)
-			warnings = append(warnings, bulletWarnings(bullet, location, seenBullets)...)
+			warnings = append(warnings, bulletWarnings(bullet.Text, location, seenBullets)...)
 		}
 	}
 

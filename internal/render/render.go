@@ -127,7 +127,7 @@ func renderTeX(doc *cv.CV, sections []string) string {
 			for _, exp := range doc.Experience {
 				b.WriteString("\\textbf{" + tex(exp.Title) + "}, " + tex(exp.Company) + " \\hfill " + tex(exp.Start) + "--" + tex(exp.End) + "\n\\begin{itemize}\n")
 				for _, bullet := range exp.Bullets {
-					b.WriteString("\\item " + tex(bullet) + "\n")
+					b.WriteString("\\item " + tex(bullet.Text) + "\n")
 				}
 				b.WriteString("\\end{itemize}\n")
 			}
@@ -138,7 +138,7 @@ func renderTeX(doc *cv.CV, sections []string) string {
 			for _, project := range doc.Projects {
 				b.WriteString("\\textbf{" + tex(project.Name) + "} -- " + tex(project.Description) + "\n\\begin{itemize}\n")
 				for _, bullet := range project.Bullets {
-					b.WriteString("\\item " + tex(bullet) + "\n")
+					b.WriteString("\\item " + tex(bullet.Text) + "\n")
 				}
 				b.WriteString("\\end{itemize}\n")
 			}

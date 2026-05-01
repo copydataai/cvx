@@ -170,7 +170,7 @@ func experienceGroups(items []cv.Experience) []bulletGroup {
 		groups = append(groups, bulletGroup{
 			key:     key,
 			label:   label,
-			bullets: item.Bullets,
+			bullets: bulletTexts(item.Bullets),
 		})
 	}
 	return groups
@@ -192,10 +192,18 @@ func projectGroups(items []cv.Project) []bulletGroup {
 		groups = append(groups, bulletGroup{
 			key:     key,
 			label:   label,
-			bullets: item.Bullets,
+			bullets: bulletTexts(item.Bullets),
 		})
 	}
 	return groups
+}
+
+func bulletTexts(bullets []cv.Bullet) []string {
+	texts := make([]string, 0, len(bullets))
+	for _, bullet := range bullets {
+		texts = append(texts, bullet.Text)
+	}
+	return texts
 }
 
 func occurrenceKeyAndLabel(key, label string, seen map[string]int) (string, string) {

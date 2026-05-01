@@ -14,16 +14,16 @@ func TestMarkdownReportsAddedRemovedAndChangedBullets(t *testing.T) {
 			{
 				Company: "Acme",
 				Title:   "Engineer",
-				Bullets: []string{
-					"Old bullet about platform work.",
+				Bullets: []cv.Bullet{
+					{Text: "Old bullet about platform work."},
 				},
 			},
 		},
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Removed bullet about internal tooling.",
+				Bullets: []cv.Bullet{
+					{Text: "Removed bullet about internal tooling."},
 				},
 			},
 		},
@@ -34,17 +34,17 @@ func TestMarkdownReportsAddedRemovedAndChangedBullets(t *testing.T) {
 			{
 				Company: "Acme",
 				Title:   "Engineer",
-				Bullets: []string{
-					"New bullet about platform work.",
+				Bullets: []cv.Bullet{
+					{Text: "New bullet about platform work."},
 				},
 			},
 		},
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Added bullet about external workflow tooling.",
-					"Added second project bullet.",
+				Bullets: []cv.Bullet{
+					{Text: "Added bullet about external workflow tooling."},
+					{Text: "Added second project bullet."},
 				},
 			},
 		},
@@ -72,8 +72,8 @@ func TestMarkdownReportsProjectReplacementAtSameIndexAsRemovedAndAdded(t *testin
 		Projects: []cv.Project{
 			{
 				Name: "Old Project",
-				Bullets: []string{
-					"Built legacy dispatch workflows.",
+				Bullets: []cv.Bullet{
+					{Text: "Built legacy dispatch workflows."},
 				},
 			},
 		},
@@ -82,8 +82,8 @@ func TestMarkdownReportsProjectReplacementAtSameIndexAsRemovedAndAdded(t *testin
 		Projects: []cv.Project{
 			{
 				Name: "New Project",
-				Bullets: []string{
-					"Created invoice review tools.",
+				Bullets: []cv.Bullet{
+					{Text: "Created invoice review tools."},
 				},
 			},
 		},
@@ -102,8 +102,8 @@ func TestMarkdownReportsUnrelatedSameLengthBulletChangeAsRemovedAndAdded(t *test
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Built scheduling workflows.",
+				Bullets: []cv.Bullet{
+					{Text: "Built scheduling workflows."},
 				},
 			},
 		},
@@ -112,8 +112,8 @@ func TestMarkdownReportsUnrelatedSameLengthBulletChangeAsRemovedAndAdded(t *test
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Created invoice exports.",
+				Bullets: []cv.Bullet{
+					{Text: "Created invoice exports."},
 				},
 			},
 		},
@@ -130,8 +130,8 @@ func TestMarkdownIgnoresSharedGenericActionVerbForWordingChanges(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Built scheduling workflows.",
+				Bullets: []cv.Bullet{
+					{Text: "Built scheduling workflows."},
 				},
 			},
 		},
@@ -140,8 +140,8 @@ func TestMarkdownIgnoresSharedGenericActionVerbForWordingChanges(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Built invoice exports.",
+				Bullets: []cv.Bullet{
+					{Text: "Built invoice exports."},
 				},
 			},
 		},
@@ -158,9 +158,9 @@ func TestMarkdownDoesNotReportShiftedUnchangedBullets(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Built scheduling workflows.",
-					"Maintained API services.",
+				Bullets: []cv.Bullet{
+					{Text: "Built scheduling workflows."},
+					{Text: "Maintained API services."},
 				},
 			},
 		},
@@ -169,9 +169,9 @@ func TestMarkdownDoesNotReportShiftedUnchangedBullets(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Created invoice exports.",
-					"Built scheduling workflows.",
+				Bullets: []cv.Bullet{
+					{Text: "Created invoice exports."},
+					{Text: "Built scheduling workflows."},
 				},
 			},
 		},
@@ -189,14 +189,14 @@ func TestMarkdownPreservesDuplicateProjectGroups(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Kept first duplicate project bullet.",
+				Bullets: []cv.Bullet{
+					{Text: "Kept first duplicate project bullet."},
 				},
 			},
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Retired legacy scheduler.",
+				Bullets: []cv.Bullet{
+					{Text: "Retired legacy scheduler."},
 				},
 			},
 		},
@@ -205,14 +205,14 @@ func TestMarkdownPreservesDuplicateProjectGroups(t *testing.T) {
 		Projects: []cv.Project{
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Kept first duplicate project bullet.",
+				Bullets: []cv.Bullet{
+					{Text: "Kept first duplicate project bullet."},
 				},
 			},
 			{
 				Name: "Ops Tool",
-				Bullets: []string{
-					"Created invoice exports.",
+				Bullets: []cv.Bullet{
+					{Text: "Created invoice exports."},
 				},
 			},
 		},

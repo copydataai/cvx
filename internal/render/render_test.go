@@ -28,7 +28,7 @@ func TestRenderTeXUsesVariantSectionOrder(t *testing.T) {
 		Projects: []cv.Project{{
 			Name:        "Project",
 			Description: "Description",
-			Bullets:     []string{"Built it"},
+			Bullets:     []cv.Bullet{{Text: "Built it"}},
 		}},
 	}
 	tex := renderTeX(doc, []string{"skills", "summary", "projects"})

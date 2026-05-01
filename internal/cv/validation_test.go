@@ -45,17 +45,17 @@ func TestWarningsDetectAgentRelevantIssues(t *testing.T) {
 		},
 		Experience: []Experience{
 			{
-				Bullets: []string{
-					"   ",
-					duplicateBullet,
-					"Improved conversion by 40%.",
-					"[Sourced] Reduced support tickets by 20%.",
-					"Built services with Go 1.22, API v2, and iOS 17 support.",
+				Bullets: []Bullet{
+					{Text: "   "},
+					{Text: duplicateBullet},
+					{Text: "Improved conversion by 40%."},
+					{Text: "[Sourced] Reduced support tickets by 20%."},
+					{Text: "Built services with Go 1.22, API v2, and iOS 17 support."},
 				},
 			},
 		},
 		Projects: []Project{
-			{Bullets: []string{duplicateBullet}},
+			{Bullets: []Bullet{{Text: duplicateBullet}}},
 			{}, {}, {}, {}, {}, {},
 		},
 	}
@@ -75,7 +75,7 @@ func TestWarningsDetectAgentRelevantIssues(t *testing.T) {
 func TestWarningsDetectLongBullets(t *testing.T) {
 	doc := &CV{
 		Projects: []Project{
-			{Bullets: []string{strings.Repeat("word ", 46)}},
+			{Bullets: []Bullet{{Text: strings.Repeat("word ", 46)}}},
 		},
 	}
 

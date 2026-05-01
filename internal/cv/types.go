@@ -1,5 +1,7 @@
 package cv
 
+import "gopkg.in/yaml.v3"
+
 type CV struct {
 	Name       string       `yaml:"name" json:"name"`
 	Contact    Contact      `yaml:"contact" json:"contact"`
@@ -29,14 +31,34 @@ type Experience struct {
 	Location string   `yaml:"location" json:"location"`
 	Start    string   `yaml:"start" json:"start"`
 	End      string   `yaml:"end" json:"end"`
-	Bullets  []string `yaml:"bullets" json:"bullets"`
+	Bullets  []Bullet `yaml:"bullets" json:"bullets"`
 }
 
 type Project struct {
 	Name        string   `yaml:"name" json:"name"`
 	Description string   `yaml:"description" json:"description"`
 	URL         string   `yaml:"url" json:"url"`
-	Bullets     []string `yaml:"bullets" json:"bullets"`
+	Bullets     []Bullet `yaml:"bullets" json:"bullets"`
+}
+
+type Bullet struct {
+	Text     string `yaml:"text" json:"text"`
+	Source   string `yaml:"source,omitempty" json:"source,omitempty"`
+	Verified bool   `yaml:"verified,omitempty" json:"verified,omitempty"`
+}
+
+func (b *Bullet) UnmarshalYAML(value *yaml.Node) error {
+	if value.Kind == yaml.ScalarNode {
+		b.Text = value.Value
+		return nil
+	}
+	type bulletAlias Bullet
+	var decoded bulletAlias
+	if err := value.Decode(&decoded); err != nil {
+		return err
+	}
+	*b = Bullet(decoded)
+	return nil
 }
 
 type Education struct {
@@ -64,4 +86,8 @@ type Warning struct {
 	Code     string `json:"code"`
 	Message  string `json:"message"`
 	Location string `json:"location"`
+}
+
+func (b Bullet) String() string {
+	return b.Text
 }
