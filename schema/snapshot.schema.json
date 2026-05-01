@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/josesanchez/cvx/schema/snapshot.schema.json",
+  "title": "CV Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input", "section_order", "cv"],
+  "properties": {
+    "input": {"type": "string"},
+    "variant": {"type": "string"},
+    "target": {"type": "string"},
+    "section_order": {"type": "array", "items": {"type": "string"}},
+    "cv": {"$ref": "cv.schema.json"}
+  }
+}

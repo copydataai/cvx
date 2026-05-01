@@ -5,6 +5,22 @@ import (
 	"path/filepath"
 )
 
+const bulletSchema = `{
+  "oneOf": [
+    {"type": "string"},
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": {"type": "string"},
+        "source": {"type": "string"},
+        "verified": {"type": "boolean"}
+      }
+    }
+  ]
+}`
+
 const cvSchema = `{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/josesanchez/cvx/schema/cv.schema.json",
@@ -35,10 +51,7 @@ const cvSchema = `{
       }
     },
     "summary": {"type": "string"},
-    "skills": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
+    "skills": {"type": "array", "items": {"type": "string"}},
     "experience": {
       "type": "array",
       "items": {
@@ -50,10 +63,7 @@ const cvSchema = `{
           "location": {"type": "string"},
           "start": {"type": "string"},
           "end": {"type": "string"},
-          "bullets": {
-            "type": "array",
-            "items": {"type": "string"}
-          }
+          "bullets": {"type": "array", "items": {"$ref": "#/$defs/bullet"}}
         }
       }
     },
@@ -66,10 +76,7 @@ const cvSchema = `{
           "name": {"type": "string"},
           "description": {"type": "string"},
           "url": {"type": "string"},
-          "bullets": {
-            "type": "array",
-            "items": {"type": "string"}
-          }
+          "bullets": {"type": "array", "items": {"$ref": "#/$defs/bullet"}}
         }
       }
     },
@@ -89,10 +96,11 @@ const cvSchema = `{
     "metadata": {
       "type": "object",
       "additionalProperties": false,
-      "properties": {
-        "updated": {"type": "string"}
-      }
+      "properties": {"updated": {"type": "string"}}
     }
+  },
+  "$defs": {
+    "bullet": ` + bulletSchema + `
   }
 }
 `
@@ -106,43 +114,46 @@ const variantSchema = `{
   "required": ["target", "section_order"],
   "properties": {
     "target": {"type": "string"},
-    "max_pages": {
-      "type": "integer",
-      "minimum": 0
-    },
+    "max_pages": {"type": "integer", "minimum": 0},
     "tone": {"type": "string"},
     "section_order": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "enum": ["summary", "experience", "projects", "skills", "education"]
-      }
+      "items": {"type": "string", "enum": ["summary", "experience", "projects", "skills", "education"]}
     },
-    "include_projects": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
-    "exclude_projects": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
-    "emphasis_keywords": {
-      "type": "array",
-      "items": {"type": "string"}
-    }
+    "include_projects": {"type": "array", "items": {"type": "string"}},
+    "exclude_projects": {"type": "array", "items": {"type": "string"}},
+    "emphasis_keywords": {"type": "array", "items": {"type": "string"}}
   }
 }
 `
 
-// WriteSchemas writes the static CV and variant JSON schemas into dir.
+const snapshotSchema = `{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/josesanchez/cvx/schema/snapshot.schema.json",
+  "title": "CV Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input", "section_order", "cv"],
+  "properties": {
+    "input": {"type": "string"},
+    "variant": {"type": "string"},
+    "target": {"type": "string"},
+    "section_order": {"type": "array", "items": {"type": "string"}},
+    "cv": {"$ref": "cv.schema.json"}
+  }
+}
+`
+
+// WriteSchemas writes the static JSON schemas into dir.
 func WriteSchemas(dir string) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
 
 	files := map[string]string{
-		"cv.schema.json":      cvSchema,
-		"variant.schema.json": variantSchema,
+		"cv.schema.json":       cvSchema,
+		"variant.schema.json":  variantSchema,
+		"snapshot.schema.json": snapshotSchema,
 	}
 	for name, contents := range files {
 		if err := os.WriteFile(filepath.Join(dir, name), []byte(contents), 0o644); err != nil {

@@ -28,10 +28,7 @@
       }
     },
     "summary": {"type": "string"},
-    "skills": {
-      "type": "array",
-      "items": {"type": "string"}
-    },
+    "skills": {"type": "array", "items": {"type": "string"}},
     "experience": {
       "type": "array",
       "items": {
@@ -43,10 +40,7 @@
           "location": {"type": "string"},
           "start": {"type": "string"},
           "end": {"type": "string"},
-          "bullets": {
-            "type": "array",
-            "items": {"type": "string"}
-          }
+          "bullets": {"type": "array", "items": {"$ref": "#/$defs/bullet"}}
         }
       }
     },
@@ -59,10 +53,7 @@
           "name": {"type": "string"},
           "description": {"type": "string"},
           "url": {"type": "string"},
-          "bullets": {
-            "type": "array",
-            "items": {"type": "string"}
-          }
+          "bullets": {"type": "array", "items": {"$ref": "#/$defs/bullet"}}
         }
       }
     },
@@ -82,9 +73,24 @@
     "metadata": {
       "type": "object",
       "additionalProperties": false,
+      "properties": {"updated": {"type": "string"}}
+    }
+  },
+  "$defs": {
+    "bullet": {
+  "oneOf": [
+    {"type": "string"},
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
       "properties": {
-        "updated": {"type": "string"}
+        "text": {"type": "string"},
+        "source": {"type": "string"},
+        "verified": {"type": "boolean"}
       }
     }
+  ]
+}
   }
 }

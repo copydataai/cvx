@@ -14,7 +14,7 @@ func TestWriteSchemas(t *testing.T) {
 		t.Fatalf("WriteSchemas() error = %v", err)
 	}
 
-	for _, name := range []string{"cv.schema.json", "variant.schema.json"} {
+	for _, name := range []string{"cv.schema.json", "variant.schema.json", "snapshot.schema.json"} {
 		data, err := os.ReadFile(filepath.Join(dir, name))
 		if err != nil {
 			t.Fatalf("read %s: %v", name, err)
@@ -39,7 +39,7 @@ func TestCheckedInSchemasMatchGeneratedOutput(t *testing.T) {
 		t.Fatalf("WriteSchemas() error = %v", err)
 	}
 
-	for _, name := range []string{"cv.schema.json", "variant.schema.json"} {
+	for _, name := range []string{"cv.schema.json", "variant.schema.json", "snapshot.schema.json"} {
 		checkedInPath := filepath.Join("..", "..", "schema", name)
 		checkedIn, err := os.ReadFile(checkedInPath)
 		if os.IsNotExist(err) {

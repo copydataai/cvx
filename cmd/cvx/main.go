@@ -65,6 +65,7 @@ func schemaCommand(args []string) error {
 	}
 	fmt.Println("schema/cv.schema.json")
 	fmt.Println("schema/variant.schema.json")
+	fmt.Println("schema/snapshot.schema.json")
 	return nil
 }
 
@@ -90,5 +91,6 @@ func schemaUsage() {
 Writes static JSON Schema files to:
   schema/cv.schema.json
   schema/variant.schema.json
+  schema/snapshot.schema.json
 `)
 }
