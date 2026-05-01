@@ -159,3 +159,45 @@ exclude_projects:
 		}
 	}
 }
+
+func TestCommandRendersHTML(t *testing.T) {
+	dir := t.TempDir()
+	input := filepath.Join(dir, "cv.yaml")
+	output := filepath.Join(dir, "cv.html")
+	reportPath := filepath.Join(dir, "last-render.json")
+	cvYAML := `name: Person
+contact:
+  email: person@example.com
+  location: Dublin
+summary: Builds developer tools.
+projects:
+  - name: CVX
+    description: CV tooling.
+    bullets:
+      - Built render workflows.
+`
+	if err := os.WriteFile(input, []byte(cvYAML), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := Command([]string{"--input", input, "--format", "html", "--output", output, "--report", reportPath}); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(output)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), "<html") || !strings.Contains(string(data), "Person") {
+		t.Fatalf("unexpected html output: %s", string(data))
+	}
+	reportData, err := os.ReadFile(reportPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded report.RenderReport
+	if err := json.Unmarshal(reportData, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.Engine != "html" || decoded.OutputHTML != output || decoded.OutputTeX != "" {
+		t.Fatalf("unexpected html report: %#v", decoded)
+	}
+}

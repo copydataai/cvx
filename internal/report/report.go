@@ -9,8 +9,9 @@ import (
 type RenderReport struct {
 	Timestamp    string           `json:"timestamp"`
 	Input        string           `json:"input"`
-	OutputTeX    string           `json:"output_tex"`
-	OutputPDF    string           `json:"output_pdf"`
+	OutputTeX    string           `json:"output_tex,omitempty"`
+	OutputHTML   string           `json:"output_html,omitempty"`
+	OutputPDF    string           `json:"output_pdf,omitempty"`
 	Template     string           `json:"template,omitempty"`
 	Variant      string           `json:"variant,omitempty"`
 	Engine       string           `json:"engine"`

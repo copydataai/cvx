@@ -3,7 +3,8 @@ package render
 import (
 	"flag"
 	"fmt"
-	"html"
+	htmlstd "html"
+	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,7 +18,9 @@ func Command(args []string) error {
 	fs := flag.NewFlagSet("render", flag.ContinueOnError)
 	input := fs.String("input", "cv.yaml", "CV YAML path")
 	variantPath := fs.String("variant", "", "variant YAML path")
-	output := fs.String("output", "output/cv.tex", "output TeX path")
+	output := fs.String("output", "", "render output path")
+	format := fs.String("format", "tex", "render format: tex or html")
+	templatePath := fs.String("template", "", "template path for html format")
 	reportPath := fs.String("report", "output/reports/last-render.json", "render report JSON path")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -28,7 +31,8 @@ func Command(args []string) error {
 	if err != nil {
 		return err
 	}
-	renderReport := newRenderReport(*input, *output, *variantPath, sections, nil)
+	actualOutput := defaultOutputPath(*format, *output)
+	renderReport := newRenderReport(*input, actualOutput, *format, *variantPath, sections, nil)
 	if errs := cv.Validate(doc); len(errs) > 0 {
 		renderReport.Warnings = reportWarnings(cv.Warnings(doc))
 		renderReport.Validation = report.ValidationResult{Success: false, Errors: errs}
@@ -57,11 +61,14 @@ func Command(args []string) error {
 		doc = cv.ApplyVariant(doc, variant)
 	}
 
-	body := renderTeX(doc, sections)
-	if err := os.MkdirAll(filepath.Dir(*output), 0o755); err != nil {
+	body, err := renderBody(doc, sections, *format, *templatePath)
+	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(*output, []byte(body), 0o644); err != nil {
+	if err := os.MkdirAll(filepath.Dir(actualOutput), 0o755); err != nil {
+		return err
+	}
+	if err := os.WriteFile(actualOutput, []byte(body), 0o644); err != nil {
 		return err
 	}
 	renderReport.Warnings = reportWarnings(cv.Warnings(doc))
@@ -69,21 +76,33 @@ func Command(args []string) error {
 	if err := report.WriteRenderReport(*reportPath, renderReport); err != nil {
 		return err
 	}
-	fmt.Println("rendered", *output)
+	fmt.Println("rendered", actualOutput)
 	return nil
 }
 
-func newRenderReport(input, output, variantPath string, sections []string, warnings []report.ReportWarning) report.RenderReport {
-	return report.RenderReport{
+func newRenderReport(input, output, format, variantPath string, sections []string, warnings []report.ReportWarning) report.RenderReport {
+	report := report.RenderReport{
 		Timestamp:    time.Now().UTC().Format(time.RFC3339),
 		Input:        input,
-		OutputTeX:    output,
-		OutputPDF:    outputPDFPath(output),
 		Variant:      variantPath,
-		Engine:       "tex-only",
+		Engine:       engineName(format),
 		Warnings:     warnings,
 		SectionOrder: append([]string(nil), sections...),
 	}
+	if format == "html" {
+		report.OutputHTML = output
+		return report
+	}
+	report.OutputTeX = output
+	report.OutputPDF = outputPDFPath(output)
+	return report
+}
+
+func engineName(format string) string {
+	if format == "html" {
+		return "html"
+	}
+	return "tex-only"
 }
 
 func outputPDFPath(outputTeX string) string {
@@ -103,6 +122,54 @@ func reportWarnings(warnings []cv.Warning) []report.ReportWarning {
 		})
 	}
 	return result
+}
+
+func defaultOutputPath(format, output string) string {
+	if output != "" {
+		return output
+	}
+	if format == "html" {
+		return "output/cv.html"
+	}
+	return "output/cv.tex"
+}
+
+func renderBody(doc *cv.CV, sections []string, format, templatePath string) (string, error) {
+	switch format {
+	case "", "tex":
+		return renderTeX(doc, sections), nil
+	case "html":
+		if templatePath == "" {
+			templatePath = defaultHTMLTemplatePath()
+		}
+		return renderHTML(doc, templatePath)
+	default:
+		return "", fmt.Errorf("unknown render format %q", format)
+	}
+}
+
+func defaultHTMLTemplatePath() string {
+	for _, path := range []string{
+		"templates/html/minimal.html.tmpl",
+		"../../templates/html/minimal.html.tmpl",
+	} {
+		if _, err := os.Stat(path); err == nil {
+			return path
+		}
+	}
+	return "templates/html/minimal.html.tmpl"
+}
+
+func renderHTML(doc *cv.CV, templatePath string) (string, error) {
+	tmpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		return "", fmt.Errorf("parse html template %s: %w", templatePath, err)
+	}
+	var b strings.Builder
+	if err := tmpl.Execute(&b, doc); err != nil {
+		return "", fmt.Errorf("execute html template %s: %w", templatePath, err)
+	}
+	return b.String(), nil
 }
 
 func renderTeX(doc *cv.CV, sections []string) string {
@@ -157,5 +224,5 @@ func renderTeX(doc *cv.CV, sections []string) string {
 
 func tex(s string) string {
 	replacer := strings.NewReplacer("\\", "\\textbackslash{}", "&", "\\&", "%", "\\%", "$", "\\$", "#", "\\#", "_", "\\_", "{", "\\{", "}", "\\}", "~", "\\textasciitilde{}", "^", "\\textasciicircum{}")
-	return replacer.Replace(html.UnescapeString(s))
+	return replacer.Replace(htmlstd.UnescapeString(s))
 }
