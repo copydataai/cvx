@@ -3,105 +3,259 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alex Rivera CV</title>
+  <title>Alex Rivera Founder Engineer CV</title>
   <style>
     :root {
-      --ink: #161616;
-      --muted: #606060;
-      --rule: #d8d3c7;
-      --paper: #fffdf8;
+      --ink: #101820;
+      --muted: #5d6870;
+      --accent: #c94f1b;
+      --accent-soft: #f5dfcc;
+      --paper: #fffaf1;
+      --panel: rgba(255, 253, 248, 0.9);
+      --line: #1f2f3a;
+    }
+    * {
+      box-sizing: border-box;
     }
     body {
       margin: 0;
-      background: var(--paper);
       color: var(--ink);
-      font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
-      line-height: 1.45;
+      background:
+        radial-gradient(circle at 16% 10%, rgba(201, 79, 27, 0.18), transparent 28%),
+        linear-gradient(135deg, #fffaf1 0%, #f3eadb 100%);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.5;
     }
     main {
-      max-width: 760px;
-      margin: 48px auto;
-      padding: 0 28px;
+      max-width: 980px;
+      margin: 36px auto;
+      padding: 36px;
+      background: var(--panel);
+      border: 1px solid rgba(31, 47, 58, 0.18);
+      box-shadow: 0 24px 70px rgba(16, 24, 32, 0.12);
     }
     header {
-      border-bottom: 2px solid var(--rule);
-      padding-bottom: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.65fr);
+      gap: 28px;
+      border-bottom: 3px solid var(--line);
+      padding-bottom: 24px;
       margin-bottom: 26px;
     }
     h1 {
-      margin: 0;
-      font-size: 38px;
-      letter-spacing: -0.04em;
-    }
-    .contact, .meta {
-      color: var(--muted);
-      font-size: 14px;
+      margin: 0 0 18px;
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
     }
     h2 {
+      margin: 30px 0 12px;
       font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
-      margin: 28px 0 10px;
+      letter-spacing: 0.16em;
+      color: var(--accent);
     }
-    .item {
-      margin: 0 0 18px;
+    p {
+      margin: 0 0 12px;
     }
-    .item-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      font-weight: 700;
+    a {
+      color: inherit;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 3px;
     }
     ul {
-      margin: 8px 0 0 20px;
+      margin: 10px 0 0 18px;
       padding: 0;
+    }
+    li {
+      margin: 6px 0;
+    }
+    .summary {
+      max-width: 680px;
+      font-size: 18px;
+    }
+    .contact-card {
+      align-self: end;
+      padding: 16px;
+      background: var(--accent-soft);
+      border-left: 5px solid var(--accent);
+      font-size: 14px;
+    }
+    .contact-card div {
+      margin: 0 0 6px;
+    }
+    .contact-card div:last-child {
+      margin-bottom: 0;
+    }
+    .signal {
+      margin-top: 14px;
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      font-size: 11px;
+    }
+    .item {
+      padding: 16px 0;
+      border-top: 1px solid rgba(31, 47, 58, 0.18);
+      break-inside: avoid;
+    }
+    .item:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: baseline;
+    }
+    .title {
+      font-weight: 800;
+      font-size: 17px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card {
+      padding: 16px;
+      background: rgba(245, 223, 204, 0.62);
+      border: 1px solid rgba(201, 79, 27, 0.22);
+      border-left: 5px solid var(--accent);
+      break-inside: avoid;
+    }
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .skills li {
+      margin: 0;
+      padding: 5px 9px;
+      background: #fff3e6;
+      border: 1px solid rgba(31, 47, 58, 0.14);
+      border-radius: 999px;
+      font-size: 13px;
+    }
+    @media (max-width: 760px) {
+      body {
+        background: var(--paper);
+      }
+      main {
+        margin: 0;
+        padding: 24px;
+        border: 0;
+        box-shadow: none;
+      }
+      header, .grid {
+        grid-template-columns: 1fr;
+      }
+      .item-head {
+        display: block;
+      }
+    }
+    @media print {
+      body {
+        background: #fff;
+      }
+      main {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+      }
+      a {
+        text-decoration: none;
+      }
+      .contact-card, .card, .skills li {
+        background: #fff;
+      }
     }
   </style>
 </head>
 <body>
   <main>
     <header>
-      <h1>Alex Rivera</h1>
-      <div class="contact">alex@example.com · Dublin, Ireland</div>
+      <div>
+        <h1>Alex Rivera</h1>
+<p class="summary">Founder-minded software engineer building local-first operations tools for service businesses.
+</p>
+        <div class="signal">Product judgment · systems execution · operational context</div>
+      </div>
+      <aside class="contact-card" aria-label="Contact">
+<div><strong>Email</strong><br><a href="mailto:alex@example.com">alex@example.com</a></div>
+
+<div><strong>Location</strong><br>Dublin, Ireland</div>
+<div><strong>GitHub</strong><br><a href="https://github.com/alexrivera">https://github.com/alexrivera</a></div><div><strong>Portfolio</strong><br><a href="https://example.com">https://example.com</a></div>
+      </aside>
     </header>
 
     <section>
-      <h2>Summary</h2>
-      <p>Founder-minded software engineer building local-first operations tools for service businesses.
-</p>
-    </section>
-
-    <section>
       <h2>Experience</h2>
-      
+
       <article class="item">
-        <div class="item-title"><span>Founder Engineer, CleanOps Studio</span><span>2024–Present</span></div>
+        <div class="item-head">
+          <div>
+            <div class="title">Founder Engineer · CleanOps Studio</div>
+<div class="meta">Dublin, Ireland</div>
+          </div>
+          <div class="meta">2024&ndash;Present</div>
+        </div>
         <ul><li>Built scheduling and job tracking workflows for cleaning operators.</li><li>Interviewed operators to map quoting, dispatch, and invoicing pain points.</li></ul>
       </article>
-      
+
     </section>
 
+
     <section>
-      <h2>Projects</h2>
-      
-      <article class="item">
-        <div class="item-title"><span>Routeboard</span></div>
-        <p class="meta">Local-first dispatch board for field service teams.</p>
-        <ul><li>Implemented drag-and-drop job planning with offline-safe state sync.</li></ul>
-      </article>
-      
-      <article class="item">
-        <div class="item-title"><span>Invoice Parser</span></div>
-        <p class="meta">Tooling for extracting line items from supplier invoices.</p>
-        <ul><li>Created review workflows for correcting extracted invoice data before export.</li></ul>
-      </article>
-      
+      <h2>Selected Builds</h2>
+      <div class="grid">
+
+        <article class="card">
+          <div class="title">Routeboard</div>
+<p class="meta">Local-first dispatch board for field service teams.</p>
+          <ul><li>Implemented drag-and-drop job planning with offline-safe state sync.</li></ul>
+        </article>
+
+        <article class="card">
+          <div class="title">Invoice Parser</div>
+<p class="meta">Tooling for extracting line items from supplier invoices.</p>
+          <ul><li>Created review workflows for correcting extracted invoice data before export.</li></ul>
+        </article>
+
+      </div>
     </section>
+
 
     <section>
       <h2>Skills</h2>
-      <p>Go, PostgreSQL, TypeScript, Linux, Docker</p>
+      <ul class="skills"><li>Go</li><li>PostgreSQL</li><li>TypeScript</li><li>Linux</li><li>Docker</li></ul>
     </section>
+
+
+    <section>
+      <h2>Education</h2>
+
+      <article class="item">
+        <div class="item-head">
+          <div class="title">BSc Computer Science</div>
+          <div class="meta">2020&ndash;2024</div>
+        </div>
+        <div class="meta">Example University</div>
+      </article>
+
+    </section>
+
   </main>
 </body>
 </html>
