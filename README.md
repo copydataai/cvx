@@ -74,6 +74,7 @@ cvx check --variant variants/yc-founder-engineer.yaml
 ```
 
 Run the standard agent workflow: lint, normalize, render, and diff when a previous snapshot exists.
+Also saves timestamped snapshots to `.cvx/history` by default.
 
 ```bash
 cvx lint
@@ -116,6 +117,21 @@ cvx prompt tailor
 ```
 
 Print a restrictive prompt from `prompts/*.md`.
+
+```bash
+cvx review facts
+cvx review bullets
+cvx review ats
+cvx review target --variant variants/yc-founder-engineer.yaml
+```
+
+Write deterministic review reports under `output/reports/`.
+
+```bash
+cvx preview --variant variants/yc-founder-engineer.yaml
+```
+
+Start a local preview dashboard with HTML output, rebuild status, and artifact links.
 
 ## Agent Workflow
 
@@ -198,6 +214,8 @@ go run ./cmd/cvx lint --variant variants/yc-founder-engineer.yaml
 go run ./cmd/cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
 go run ./cmd/cvx render --variant variants/yc-founder-engineer.yaml
 go run ./cmd/cvx render --format html --output output/cv.html
+go run ./cmd/cvx review target --variant variants/yc-founder-engineer.yaml
+go run ./cmd/cvx preview --variant variants/yc-founder-engineer.yaml --once
 go run ./cmd/cvx schema
 ```
 

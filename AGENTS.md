@@ -69,6 +69,8 @@ For the standard workflow, prefer:
 cvx check --variant variants/yc-founder-engineer.yaml
 ```
 
+This saves timestamped snapshots to `.cvx/history` by default.
+
 Rendering writes an audit report:
 
 ```txt
@@ -115,6 +117,7 @@ Validation:
 - render report: pass/fail
 - cvx diff: pass/fail, if used
 - cvx schema: pass/fail, if used
+- cvx review: pass/fail, if used
 
 Notes:
 - ...
