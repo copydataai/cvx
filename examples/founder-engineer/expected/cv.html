@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alex Rivera CV</title>
+  <style>
+    :root {
+      --ink: #161616;
+      --muted: #606060;
+      --rule: #d8d3c7;
+      --paper: #fffdf8;
+    }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+      line-height: 1.45;
+    }
+    main {
+      max-width: 760px;
+      margin: 48px auto;
+      padding: 0 28px;
+    }
+    header {
+      border-bottom: 2px solid var(--rule);
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      letter-spacing: -0.04em;
+    }
+    .contact, .meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin: 28px 0 10px;
+    }
+    .item {
+      margin: 0 0 18px;
+    }
+    .item-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-weight: 700;
+    }
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Alex Rivera</h1>
+      <div class="contact">alex@example.com · Dublin, Ireland</div>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p>Founder-minded software engineer building local-first operations tools for service businesses.
+</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      
+      <article class="item">
+        <div class="item-title"><span>Founder Engineer, CleanOps Studio</span><span>2024–Present</span></div>
+        <ul><li>Built scheduling and job tracking workflows for cleaning operators.</li><li>Interviewed operators to map quoting, dispatch, and invoicing pain points.</li></ul>
+      </article>
+      
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      
+      <article class="item">
+        <div class="item-title"><span>Routeboard</span></div>
+        <p class="meta">Local-first dispatch board for field service teams.</p>
+        <ul><li>Implemented drag-and-drop job planning with offline-safe state sync.</li></ul>
+      </article>
+      
+      <article class="item">
+        <div class="item-title"><span>Invoice Parser</span></div>
+        <p class="meta">Tooling for extracting line items from supplier invoices.</p>
+        <ul><li>Created review workflows for correcting extracted invoice data before export.</li></ul>
+      </article>
+      
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <p>Go, PostgreSQL, TypeScript, Linux, Docker</p>
+    </section>
+  </main>
+</body>
+</html>
