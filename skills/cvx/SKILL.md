@@ -42,6 +42,12 @@ cvx normalize --variant variants/<target>.yaml --output output/current.json
 cvx render --variant variants/<target>.yaml
 ```
 
+Or run the bundled workflow:
+
+```bash
+cvx check --variant variants/<target>.yaml
+```
+
 For comparing snapshots:
 
 ```bash
@@ -52,6 +58,12 @@ For editor/schema support:
 
 ```bash
 cvx schema
+```
+
+For task prompt text:
+
+```bash
+cvx prompt tailor
 ```
 
 ## Editing Policy
@@ -66,6 +78,15 @@ Allowed changes:
 - variant selection rules
 - template presentation
 - validation/reporting code
+
+Bullet provenance may be added when the source is known:
+
+```yaml
+bullets:
+  - text: Built scheduling workflows for operators.
+    source: human
+    verified: true
+```
 
 Forbidden changes without human-provided facts:
 

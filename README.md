@@ -53,10 +53,27 @@ prompts/*.md             # restrictive task prompts
 skills/cvx/SKILL.md      # agent workflow
 templates/html/*.tmpl    # presentation examples
 schema/*.schema.json     # editor/agent schema support
+examples/**              # fake CV repos for testing and demos
 output/**                # generated artifacts, not source of truth
 ```
 
+Bullets may be simple strings or structured objects with provenance:
+
+```yaml
+bullets:
+  - Built lead management workflows.
+  - text: Interviewed operators to map quoting and dispatch pain points.
+    source: human
+    verified: true
+```
+
 ## Commands
+
+```bash
+cvx check --variant variants/yc-founder-engineer.yaml
+```
+
+Run the standard agent workflow: lint, normalize, render, and diff when a previous snapshot exists.
 
 ```bash
 cvx lint
@@ -77,6 +94,12 @@ cvx render --variant variants/yc-founder-engineer.yaml
 Write `output/cv.tex` and `output/reports/last-render.json`.
 
 ```bash
+cvx render --format html --output output/cv.html
+```
+
+Render a local HTML artifact from `templates/html/minimal.html.tmpl`.
+
+```bash
 cvx diff --from output/previous.json --to output/current.json
 ```
 
@@ -88,6 +111,12 @@ cvx schema
 
 Write JSON Schema files for editor and agent support.
 
+```bash
+cvx prompt tailor
+```
+
+Print a restrictive prompt from `prompts/*.md`.
+
 ## Agent Workflow
 
 A typical tailoring workflow:
@@ -98,6 +127,12 @@ cp output/current.json output/previous.json 2>/dev/null || true
 cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
 cvx render --variant variants/yc-founder-engineer.yaml
 cvx diff --from output/previous.json --to output/current.json
+```
+
+Or use the bundled workflow command:
+
+```bash
+cvx check --variant variants/yc-founder-engineer.yaml
 ```
 
 The agent should then report:
@@ -154,6 +189,7 @@ go test ./...
 go run ./cmd/cvx lint --variant variants/yc-founder-engineer.yaml
 go run ./cmd/cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
 go run ./cmd/cvx render --variant variants/yc-founder-engineer.yaml
+go run ./cmd/cvx render --format html --output output/cv.html
 go run ./cmd/cvx schema
 ```
 

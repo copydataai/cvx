@@ -63,6 +63,12 @@ cvx lint
 cvx render
 ```
 
+For the standard workflow, prefer:
+
+```bash
+cvx check --variant variants/yc-founder-engineer.yaml
+```
+
 Rendering writes an audit report:
 
 ```txt
@@ -135,6 +141,7 @@ prompts/*.md
 skills/cvx/SKILL.md
 templates/**/*.tex.njk
 templates/html/*.tmpl
+examples/**
 internal/**
 cmd/**
 README.md
