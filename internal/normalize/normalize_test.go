@@ -5,8 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/josesanchez/cvx/internal/cv"
 )
 
 func TestWriteAppliesVariantProjectFiltering(t *testing.T) {
@@ -49,12 +47,18 @@ exclude_projects:
 	if err != nil {
 		t.Fatal(err)
 	}
-	var doc cv.CV
-	if err := json.Unmarshal(data, &doc); err != nil {
+	var snapshot Snapshot
+	if err := json.Unmarshal(data, &snapshot); err != nil {
 		t.Fatal(err)
 	}
-	if len(doc.Projects) != 1 || doc.Projects[0].Name != "Keep" {
-		t.Fatalf("unexpected projects: %#v", doc.Projects)
+	if snapshot.Input != input || snapshot.Variant != variant || snapshot.Target != "backend engineer" {
+		t.Fatalf("unexpected snapshot metadata: %#v", snapshot)
+	}
+	if len(snapshot.SectionOrder) != 2 || snapshot.SectionOrder[1] != "projects" {
+		t.Fatalf("unexpected section order: %#v", snapshot.SectionOrder)
+	}
+	if snapshot.CV == nil || len(snapshot.CV.Projects) != 1 || snapshot.CV.Projects[0].Name != "Keep" {
+		t.Fatalf("unexpected projects: %#v", snapshot.CV)
 	}
 }
 

@@ -79,6 +79,15 @@ func loadJSON(path string) (*cv.CV, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read %s: %w", path, err)
 	}
+	var snapshot struct {
+		CV *cv.CV `json:"cv"`
+	}
+	if err := json.Unmarshal(data, &snapshot); err != nil {
+		return nil, fmt.Errorf("decode %s: %w", path, err)
+	}
+	if snapshot.CV != nil {
+		return snapshot.CV, nil
+	}
 	var doc cv.CV
 	if err := json.Unmarshal(data, &doc); err != nil {
 		return nil, fmt.Errorf("decode %s: %w", path, err)
