@@ -13,6 +13,8 @@ import (
 	"github.com/josesanchez/cvx/internal/schema"
 )
 
+const version = "0.1.0"
+
 func main() {
 	if err := run(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, "cvx:", err)
@@ -43,6 +45,9 @@ func run(args []string) error {
 		return prompt.Command(args[1:])
 	case "schema":
 		return schemaCommand(args[1:])
+	case "version":
+		fmt.Println(version)
+		return nil
 	case "help", "--help", "-h":
 		usage()
 		return nil
@@ -81,6 +86,7 @@ Usage:
   cvx diff --from output/previous.json --to output/current.json [--output output/reports/last-diff.md]
   cvx prompt list|<name>
   cvx schema
+  cvx version
 `)
 }
 

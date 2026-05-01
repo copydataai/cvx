@@ -1,6 +1,10 @@
 # Generated cvx artifacts
 output/
 .cvx/
+*.aux
+*.log
+*.out
+*.toc
 
 # Local build outputs
 /cvx
