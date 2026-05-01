@@ -155,6 +155,14 @@ Notes:
 - ...
 ```
 
+## Skill Packaging
+
+The `cvx` agent workflow is packaged in `skills/cvx`.
+
+- Install or link it into a local agent skills directory using [docs/skills/install.md](/Users/josesanchez/Developer/public/cvx/docs/skills/install.md).
+- Read [skills/cvx/README.md](/Users/josesanchez/Developer/public/cvx/skills/cvx/README.md) for Codex-style and generic agent usage.
+- Use [skills/cvx/examples/tailor-founder-engineer.md](/Users/josesanchez/Developer/public/cvx/skills/cvx/examples/tailor-founder-engineer.md) as a complete example prompt.
+
 ## Factual Accuracy Rule
 
 Do not invent:
