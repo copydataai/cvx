@@ -8,6 +8,7 @@ import (
 
 	"github.com/josesanchez/cvx/internal/cv"
 	"github.com/josesanchez/cvx/internal/diff"
+	"github.com/josesanchez/cvx/internal/history"
 	"github.com/josesanchez/cvx/internal/normalize"
 	"github.com/josesanchez/cvx/internal/render"
 )
@@ -24,6 +25,8 @@ func Command(args []string) error {
 	current := fs.String("current", "output/current.json", "current normalized snapshot path")
 	renderOutput := fs.String("render-output", "output/cv.tex", "rendered TeX output path")
 	diffOutput := fs.String("diff-output", "output/reports/last-diff.md", "diff markdown output path")
+	historyDir := fs.String("history-dir", ".cvx/history", "snapshot history directory")
+	saveHistory := fs.Bool("save-history", true, "save current snapshot to history")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -40,6 +43,13 @@ func Command(args []string) error {
 		return err
 	}
 	fmt.Println("check: normalized", *current)
+	if *saveHistory {
+		saved, err := history.SaveSnapshot(*current, *historyDir)
+		if err != nil {
+			return err
+		}
+		fmt.Println("check: history", saved)
+	}
 
 	renderArgs := []string{"--input", *input, "--output", *renderOutput}
 	if *variant != "" {
@@ -86,8 +96,9 @@ func lint(input, variantPath string) error {
 
 func usage() {
 	fmt.Print(`Usage:
-  cvx check [--input cv.yaml] [--variant variants/name.yaml]
+  cvx check [--input cv.yaml] [--variant variants/name.yaml] [--save-history=true]
 
 Runs lint, normalize, render, and diff when a previous snapshot exists.
+Saves normalized snapshots to .cvx/history by default.
 `)
 }
