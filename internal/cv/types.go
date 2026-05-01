@@ -1,6 +1,10 @@
 package cv
 
-import "gopkg.in/yaml.v3"
+import (
+	"encoding/json"
+
+	"gopkg.in/yaml.v3"
+)
 
 type CV struct {
 	Name       string       `yaml:"name" json:"name"`
@@ -86,6 +90,21 @@ type Warning struct {
 	Code     string `json:"code"`
 	Message  string `json:"message"`
 	Location string `json:"location"`
+}
+
+func (b *Bullet) UnmarshalJSON(data []byte) error {
+	var text string
+	if err := json.Unmarshal(data, &text); err == nil {
+		b.Text = text
+		return nil
+	}
+	type bulletAlias Bullet
+	var decoded bulletAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*b = Bullet(decoded)
+	return nil
 }
 
 func (b Bullet) String() string {

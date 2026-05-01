@@ -106,3 +106,21 @@ func assertNoWarning(t *testing.T, warnings []Warning, code, location string) {
 		}
 	}
 }
+
+func TestBulletUnmarshalJSONAcceptsStringAndObject(t *testing.T) {
+	var scalar Bullet
+	if err := scalar.UnmarshalJSON([]byte(`"Built workflow."`)); err != nil {
+		t.Fatal(err)
+	}
+	if scalar.Text != "Built workflow." {
+		t.Fatalf("unexpected scalar bullet: %#v", scalar)
+	}
+
+	var object Bullet
+	if err := object.UnmarshalJSON([]byte(`{"text":"Interviewed operators.","source":"human","verified":true}`)); err != nil {
+		t.Fatal(err)
+	}
+	if object.Text != "Interviewed operators." || object.Source != "human" || !object.Verified {
+		t.Fatalf("unexpected object bullet: %#v", object)
+	}
+}
