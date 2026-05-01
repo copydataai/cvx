@@ -54,7 +54,7 @@ func Command(args []string) error {
 		}
 		sections = variant.SectionOrder
 		renderReport.SectionOrder = append([]string(nil), sections...)
-		doc.Projects = applyProjectFilter(doc.Projects, variant)
+		doc = cv.ApplyVariant(doc, variant)
 	}
 
 	body := renderTeX(doc, sections)
@@ -103,31 +103,6 @@ func reportWarnings(warnings []cv.Warning) []report.ReportWarning {
 		})
 	}
 	return result
-}
-
-func applyProjectFilter(projects []cv.Project, variant *cv.Variant) []cv.Project {
-	include := toSet(variant.IncludeProjects)
-	exclude := toSet(variant.ExcludeProjects)
-	var filtered []cv.Project
-	for _, project := range projects {
-		_, explicitlyIncluded := include[project.Name]
-		if len(include) > 0 && !explicitlyIncluded {
-			continue
-		}
-		if exclude[project.Name] {
-			continue
-		}
-		filtered = append(filtered, project)
-	}
-	return filtered
-}
-
-func toSet(items []string) map[string]bool {
-	set := map[string]bool{}
-	for _, item := range items {
-		set[item] = true
-	}
-	return set
 }
 
 func renderTeX(doc *cv.CV, sections []string) string {

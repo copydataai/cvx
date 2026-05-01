@@ -210,3 +210,34 @@ func ValidateVariant(v *Variant) []string {
 	}
 	return errs
 }
+
+func ApplyVariant(doc *CV, variant *Variant) *CV {
+	copy := *doc
+	copy.Projects = filterProjects(doc.Projects, variant)
+	return &copy
+}
+
+func filterProjects(projects []Project, variant *Variant) []Project {
+	include := stringSet(variant.IncludeProjects)
+	exclude := stringSet(variant.ExcludeProjects)
+	filtered := make([]Project, 0, len(projects))
+	for _, project := range projects {
+		_, explicitlyIncluded := include[project.Name]
+		if len(include) > 0 && !explicitlyIncluded {
+			continue
+		}
+		if exclude[project.Name] {
+			continue
+		}
+		filtered = append(filtered, project)
+	}
+	return filtered
+}
+
+func stringSet(items []string) map[string]bool {
+	set := map[string]bool{}
+	for _, item := range items {
+		set[item] = true
+	}
+	return set
+}

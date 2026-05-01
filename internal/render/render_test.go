@@ -14,7 +14,7 @@ import (
 func TestApplyProjectFilterIncludesOnlyNamedProjects(t *testing.T) {
 	projects := []cv.Project{{Name: "Keep"}, {Name: "Drop"}}
 	variant := &cv.Variant{IncludeProjects: []string{"Keep"}}
-	filtered := applyProjectFilter(projects, variant)
+	filtered := cv.ApplyVariant(&cv.CV{Projects: projects}, variant).Projects
 	if len(filtered) != 1 || filtered[0].Name != "Keep" {
 		t.Fatalf("unexpected filtered projects: %#v", filtered)
 	}
