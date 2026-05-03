@@ -201,3 +201,24 @@ projects:
 		t.Fatalf("unexpected html report: %#v", decoded)
 	}
 }
+
+func TestFounderExampleHTMLGolden(t *testing.T) {
+	input := filepath.Join("..", "..", "examples", "founder-engineer", "cv.yaml")
+	variant := filepath.Join("..", "..", "examples", "founder-engineer", "variants", "yc-founder-engineer.yaml")
+	templatePath := filepath.Join("..", "..", "templates", "html", "founder.html.tmpl")
+	output := filepath.Join(t.TempDir(), "cv.html")
+	if err := Command([]string{"--input", input, "--variant", variant, "--format", "html", "--template", templatePath, "--output", output}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile(output)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want, err := os.ReadFile(filepath.Join("..", "..", "examples", "founder-engineer", "expected", "cv.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != string(want) {
+		t.Fatal("founder example HTML differs from golden; regenerate examples/founder-engineer/expected/cv.html if intentional")
+	}
+}
