@@ -219,6 +219,22 @@ go run ./cmd/cvx preview --variant variants/yc-founder-engineer.yaml --once
 go run ./cmd/cvx schema
 ```
 
+## Install
+
+From this repository:
+
+```bash
+go install ./cmd/cvx
+```
+
+After publishing a tagged module:
+
+```bash
+go install github.com/josesanchez/cvx/cmd/cvx@latest
+```
+
+See [docs/install/go-install.md](docs/install/go-install.md).
+
 ## Product Direction
 
 The CLI should remain a small deterministic kernel.

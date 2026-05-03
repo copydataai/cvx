@@ -1,0 +1,21 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+      - run: go test ./...
+      - run: go run ./cmd/cvx check --variant variants/yc-founder-engineer.yaml --save-history=false
+      - run: go run ./cmd/cvx render --format html --template templates/html/founder.html.tmpl --output output/founder.html
+      - run: go run ./cmd/cvx review target --variant variants/yc-founder-engineer.yaml
+      - run: go run ./cmd/cvx schema
