@@ -209,6 +209,14 @@ If something is unclear, mark it:
 ## Development
 
 ```bash
+make test
+make build
+make check
+```
+
+Equivalent direct commands:
+
+```bash
 go test ./...
 go run ./cmd/cvx lint --variant variants/yc-founder-engineer.yaml
 go run ./cmd/cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
@@ -234,6 +242,8 @@ go install github.com/josesanchez/cvx/cmd/cvx@latest
 ```
 
 See [docs/install/go-install.md](docs/install/go-install.md).
+
+Tagged releases are configured through `.goreleaser.yml` and `.github/workflows/release.yml`.
 
 ## Product Direction
 
