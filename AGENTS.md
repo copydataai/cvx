@@ -63,6 +63,8 @@ cvx lint
 cvx render
 ```
 
+If local PDF tooling is missing, render may still pass with TeX output and a PDF warning in `output/reports/last-render.json`.
+
 For the standard workflow, prefer:
 
 ```bash

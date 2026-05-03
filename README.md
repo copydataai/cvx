@@ -93,6 +93,14 @@ cvx render --variant variants/yc-founder-engineer.yaml
 ```
 
 Write `output/cv.tex` and `output/reports/last-render.json`.
+If `tectonic`, `latexmk`, or `pdflatex` is installed, `cvx` also attempts PDF export.
+If no PDF engine is available, render still succeeds and the report records a `pdf_engine_missing` warning.
+
+```bash
+cvx render --pdf-engine none
+```
+
+Force TeX-only output.
 
 ```bash
 cvx render --format html --output output/cv.html
@@ -111,6 +119,12 @@ cvx schema
 ```
 
 Write JSON Schema files for editor and agent support.
+
+```bash
+cvx schema check
+```
+
+Verify checked-in schemas match generated schemas.
 
 ```bash
 cvx prompt tailor
@@ -132,6 +146,7 @@ cvx preview --variant variants/yc-founder-engineer.yaml
 ```
 
 Start a local preview dashboard with HTML output, rebuild status, and artifact links.
+The dashboard includes tabs for HTML, TeX, render report, diff report, reviews, and snapshots.
 
 ## Agent Workflow
 
