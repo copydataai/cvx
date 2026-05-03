@@ -8,3 +8,4 @@ output/
 
 # Local build outputs
 /cvx
+bin/
