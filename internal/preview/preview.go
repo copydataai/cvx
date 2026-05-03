@@ -56,6 +56,10 @@ func Command(args []string) error {
 	mux.HandleFunc("/artifact/render-report", artifactHandler("output/reports/last-render.json", "application/json; charset=utf-8"))
 	mux.HandleFunc("/artifact/diff-report", artifactHandler("output/reports/last-diff.md", "text/markdown; charset=utf-8"))
 	mux.HandleFunc("/artifact/current-json", artifactHandler("output/current.json", "application/json; charset=utf-8"))
+	mux.HandleFunc("/artifact/review-facts", artifactHandler("output/reports/review-facts.md", "text/markdown; charset=utf-8"))
+	mux.HandleFunc("/artifact/review-bullets", artifactHandler("output/reports/review-bullets.md", "text/markdown; charset=utf-8"))
+	mux.HandleFunc("/artifact/review-ats", artifactHandler("output/reports/review-ats.md", "text/markdown; charset=utf-8"))
+	mux.HandleFunc("/artifact/review-target", artifactHandler("output/reports/review-target.md", "text/markdown; charset=utf-8"))
 
 	fmt.Println("preview server listening on", cfg.addr)
 	return http.ListenAndServe(cfg.addr, mux)
@@ -220,12 +224,16 @@ var dashboardTemplate = template.Must(template.New("dashboard").Parse(`<!doctype
   <style>
     body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f6f2ea; color: #17130d; }
     header { display: flex; gap: 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid #ded6c8; background: #fffaf0; }
-    main { padding: 1rem; }
-    nav { display: flex; flex-wrap: wrap; gap: .75rem; }
-    a, button { color: #173f35; font-weight: 700; }
+    main { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 86px); }
+    nav.tabs { padding: 1rem; border-right: 1px solid #ded6c8; background: #fdf7eb; display: flex; flex-direction: column; gap: .5rem; }
+    nav.tabs a { color: #173f35; font-weight: 800; text-decoration: none; padding: .55rem .7rem; border: 1px solid #d8cfbf; background: #fffaf0; }
     .status { display: grid; gap: .25rem; font-size: .95rem; }
     .error { color: #8b1e16; white-space: pre-wrap; }
-    iframe { width: 100%; height: calc(100vh - 9rem); border: 1px solid #ded6c8; background: white; }
+    .panel { padding: 1rem; }
+    iframe { width: 100%; height: calc(100vh - 8rem); border: 1px solid #ded6c8; background: white; }
+    .quicklinks { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .quicklinks a { color: #173f35; font-weight: 700; }
+    @media (max-width: 760px) { main { grid-template-columns: 1fr; } nav.tabs { border-right: 0; border-bottom: 1px solid #ded6c8; } }
   </style>
 </head>
 <body>
@@ -236,17 +244,23 @@ var dashboardTemplate = template.Must(template.New("dashboard").Parse(`<!doctype
       <span>Watching source files for changes.</span>
       {{if .LastErr}}<span class="error">Last error: {{.LastErr}}</span>{{end}}
     </div>
-    <nav>
-      <a href="/rebuild">Rebuild</a>
-      <a href="/artifact/html">HTML</a>
-      <a href="/artifact/tex">TeX</a>
-      <a href="/artifact/render-report">Render report</a>
-      <a href="/artifact/diff-report">Diff report</a>
-      <a href="/artifact/current-json">Current JSON</a>
-    </nav>
+    <div class="quicklinks"><a href="/rebuild">Rebuild</a></div>
   </header>
   <main>
-    <iframe title="CV HTML preview" src="/artifact/html"></iframe>
+    <nav class="tabs">
+      <a href="/artifact/html" target="preview-frame">HTML</a>
+      <a href="/artifact/tex" target="preview-frame">TeX</a>
+      <a href="/artifact/render-report" target="preview-frame">Render Report</a>
+      <a href="/artifact/diff-report" target="preview-frame">Diff Report</a>
+      <a href="/artifact/current-json" target="preview-frame">Snapshot</a>
+      <a href="/artifact/review-facts" target="preview-frame">Facts Review</a>
+      <a href="/artifact/review-bullets" target="preview-frame">Bullets Review</a>
+      <a href="/artifact/review-ats" target="preview-frame">ATS Review</a>
+      <a href="/artifact/review-target" target="preview-frame">Target Review</a>
+    </nav>
+    <section class="panel">
+      <iframe name="preview-frame" title="CV preview artifact" src="/artifact/html"></iframe>
+    </section>
   </main>
 </body>
 </html>`))
