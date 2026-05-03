@@ -12,6 +12,8 @@ type RenderReport struct {
 	OutputTeX    string           `json:"output_tex,omitempty"`
 	OutputHTML   string           `json:"output_html,omitempty"`
 	OutputPDF    string           `json:"output_pdf,omitempty"`
+	PDFStatus    string           `json:"pdf_status,omitempty"`
+	PDFError     string           `json:"pdf_error,omitempty"`
 	Template     string           `json:"template,omitempty"`
 	Variant      string           `json:"variant,omitempty"`
 	Engine       string           `json:"engine"`

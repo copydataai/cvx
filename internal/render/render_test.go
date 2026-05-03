@@ -72,7 +72,7 @@ projects:
 		t.Fatalf("WriteFile() error = %v", err)
 	}
 
-	if err := Command([]string{"--input", input, "--output", output, "--report", reportPath}); err != nil {
+	if err := Command([]string{"--input", input, "--output", output, "--report", reportPath, "--pdf-engine", "none"}); err != nil {
 		t.Fatalf("Command() error = %v", err)
 	}
 
@@ -141,7 +141,7 @@ exclude_projects:
 		t.Fatalf("WriteFile(variant) error = %v", err)
 	}
 
-	if err := Command([]string{"--input", input, "--variant", variantPath, "--output", output, "--report", reportPath}); err != nil {
+	if err := Command([]string{"--input", input, "--variant", variantPath, "--output", output, "--report", reportPath, "--pdf-engine", "none"}); err != nil {
 		t.Fatalf("Command() error = %v", err)
 	}
 

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/josesanchez/cvx/internal/cv"
+	"github.com/josesanchez/cvx/internal/pdf"
 	"github.com/josesanchez/cvx/internal/report"
 )
 
@@ -23,6 +24,7 @@ func Command(args []string) error {
 	format := fs.String("format", "tex", "render format: tex or html")
 	templatePath := fs.String("template", "", "template path for html or tex format")
 	reportPath := fs.String("report", "output/reports/last-render.json", "render report JSON path")
+	pdfEngine := fs.String("pdf-engine", "auto", "PDF engine for tex renders: auto, tectonic, latexmk, pdflatex, none")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -74,6 +76,16 @@ func Command(args []string) error {
 	}
 	renderReport.Warnings = reportWarnings(cv.Warnings(doc))
 	renderReport.Validation = report.ValidationResult{Success: true}
+	if *format == "" || *format == "tex" {
+		pdfResult := pdf.Compile(actualOutput, outputPDFPath(actualOutput), *pdfEngine)
+		renderReport.PDFStatus = pdfResult.Status
+		renderReport.Engine = pdfResult.Engine
+		renderReport.OutputPDF = pdfResult.Output
+		renderReport.PDFError = pdfResult.Error
+		if pdfResult.Error != "" && pdfResult.Status == "skipped" {
+			renderReport.Warnings = append(renderReport.Warnings, report.ReportWarning{Code: "pdf_engine_missing", Message: pdfResult.Error, Location: "render.pdf"})
+		}
+	}
 	if err := report.WriteRenderReport(*reportPath, renderReport); err != nil {
 		return err
 	}
