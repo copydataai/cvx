@@ -1,34 +1,81 @@
-name: Your Name
+name: Jordan Vale
 contact:
-  email: you@example.com
+  email: jordan@example.com
   phone: ""
-  location: City, Country
+  location: Dublin, Ireland
 links:
   - label: GitHub
-    url: https://github.com/yourname
+    url: https://github.com/jordanvale
+  - label: Portfolio
+    url: https://jordan.example.com
 summary: >
-  Short factual professional summary. Do not include claims that are not supported by source data.
+  Founder-minded software engineer building local-first tools for service businesses, with hands-on ownership across product discovery, backend systems, and operational workflows.
 skills:
   - Go
+  - PostgreSQL
+  - TypeScript
   - Linux
+  - Docker
+  - SQLite
+  - HTMX
+  - Observability
 experience:
-  - company: Example Company
-    title: Software Engineer
-    location: Remote
+  - company: FieldOS Lab
+    title: Founder Engineer
+    location: Dublin, Ireland
     start: "2024"
     end: Present
     bullets:
-      - Built and maintained backend services for internal users.
-projects:
-  - name: cvx
-    description: Agent-native CV system.
-    url: ""
+      - text: Built scheduling, dispatch, and job-status workflows for cleaning and field-service operators.
+        source: human
+        verified: true
+      - text: Interviewed operators to map quoting, route planning, and invoicing pain points before implementation.
+        source: human
+        verified: true
+      - text: Designed local-first data flows so teams could keep working during unreliable site connectivity.
+        source: human
+        verified: true
+  - company: Northstar Tools
+    title: Backend Engineer
+    location: Remote
+    start: "2022"
+    end: "2024"
     bullets:
-      - Created structured YAML workflows for rendering CVs.
+      - text: Built Go services for customer onboarding, account configuration, and operational reporting.
+        source: human
+        verified: true
+      - text: Improved incident debugging by adding structured logs, health checks, and runbook-oriented error messages.
+        source: human
+        verified: true
+projects:
+  - name: Routeboard
+    description: Local-first dispatch board for field-service teams.
+    url: https://github.com/jordanvale/routeboard
+    bullets:
+      - text: Implemented offline-safe job planning with conflict-aware sync and operator-friendly status changes.
+        source: human
+        verified: true
+      - text: Built a compact HTML interface for fast updates from tablets and low-end laptops.
+        source: human
+        verified: true
+  - name: Invoice Review
+    description: Review workflow for correcting extracted supplier invoice data before export.
+    url: https://github.com/jordanvale/invoice-review
+    bullets:
+      - text: Created validation screens for checking line items, supplier names, and account codes before posting.
+        source: human
+        verified: true
+  - name: cvx
+    description: Agent-native CV workflow with structured facts, variants, reports, and local rendering.
+    url: https://github.com/jordanvale/cvx
+    bullets:
+      - text: Built deterministic lint, normalize, render, diff, review, and preview commands for agent workflows.
+        source: repository
+        verified: true
 education:
   - institution: Example University
-    degree: Example Degree
-    start: "2020"
-    end: "2024"
+    degree: BSc Computer Science
+    start: "2018"
+    end: "2022"
 metadata:
-  updated: "2026-04-30"
+  updated: "2026-05-03"
