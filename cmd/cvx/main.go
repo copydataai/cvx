@@ -68,6 +68,13 @@ func schemaCommand(args []string) error {
 			schemaUsage()
 			return nil
 		}
+		if len(args) == 1 && args[0] == "check" {
+			if err := schema.CheckSchemas("schema"); err != nil {
+				return err
+			}
+			fmt.Println("schema: check pass")
+			return nil
+		}
 		return fmt.Errorf("schema: unknown argument %q", args[0])
 	}
 
@@ -94,6 +101,7 @@ Usage:
   cvx preview [--addr 127.0.0.1:4321] [--variant variants/name.yaml]
   cvx review facts|bullets|ats|target [--variant variants/name.yaml]
   cvx schema
+  cvx schema check
   cvx version
 `)
 }
@@ -101,6 +109,7 @@ Usage:
 func schemaUsage() {
 	fmt.Print(`Usage:
   cvx schema
+  cvx schema check
 
 Writes static JSON Schema files to:
   schema/cv.schema.json

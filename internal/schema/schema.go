@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -158,6 +159,31 @@ func WriteSchemas(dir string) error {
 	for name, contents := range files {
 		if err := os.WriteFile(filepath.Join(dir, name), []byte(contents), 0o644); err != nil {
 			return err
+		}
+	}
+	return nil
+}
+
+func CheckSchemas(dir string) error {
+	tmp, err := os.MkdirTemp("", "cvx-schema-check-*")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(tmp)
+	if err := WriteSchemas(tmp); err != nil {
+		return err
+	}
+	for _, name := range []string{"cv.schema.json", "variant.schema.json", "snapshot.schema.json"} {
+		current, err := os.ReadFile(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+		expected, err := os.ReadFile(filepath.Join(tmp, name))
+		if err != nil {
+			return err
+		}
+		if string(current) != string(expected) {
+			return fmt.Errorf("%s differs from generated schema; run `cvx schema`", filepath.Join(dir, name))
 		}
 	}
 	return nil

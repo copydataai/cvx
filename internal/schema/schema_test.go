@@ -58,3 +58,19 @@ func TestCheckedInSchemasMatchGeneratedOutput(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckSchemas(t *testing.T) {
+	dir := t.TempDir()
+	if err := WriteSchemas(dir); err != nil {
+		t.Fatal(err)
+	}
+	if err := CheckSchemas(dir); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "cv.schema.json"), []byte("{}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := CheckSchemas(dir); err == nil {
+		t.Fatal("expected drift error")
+	}
+}
