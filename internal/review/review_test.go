@@ -42,8 +42,8 @@ education: []
 	text := string(data)
 	assertContains(t, text, "# CV Ada Lovelace Review")
 	assertContains(t, text, "## Facts")
-	assertContains(t, text, "- missing_link at links[0]: link URL is empty")
-	assertContains(t, text, "- suspicious_metric at experience[0].bullets[0]: bullet contains a metric without [Sourced] or [Verified]")
+	assertContains(t, text, "[High] missing_link at links[0]: link URL is empty")
+	assertContains(t, text, "[High] suspicious_metric at experience[0].bullets[0]: bullet contains a metric without [Sourced] or [Verified]")
 }
 
 func TestTargetReportGeneration(t *testing.T) {
@@ -97,7 +97,7 @@ exclude_projects:
 	assertContains(t, text, "### Emphasis Keywords\n- systems\n- product")
 	assertContains(t, text, "### Included Projects\n- cvx\n- missing-project")
 	assertContains(t, text, "### Excluded Projects\n- old-project")
-	assertContains(t, text, "### Missing Included Projects\n- missing-project")
+	assertContains(t, text, "### Missing Included Projects\n- [High] missing-project")
 }
 
 func writeFile(t *testing.T, path, contents string) {

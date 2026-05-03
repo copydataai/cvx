@@ -100,10 +100,11 @@ func factsReport(doc *cv.CV, warnings []cv.Warning) *Report {
 	return &Report{
 		Name:  doc.Name,
 		Title: "Facts",
-		Sections: []Section{{
-			Heading: "Warnings",
-			Items:   warningItems(warnings, "suspicious_metric", "missing_link"),
-		}},
+		Sections: []Section{
+			{Heading: "Warnings", Items: warningItems(warnings, "suspicious_metric", "missing_link")},
+			{Heading: "Provenance", Items: provenanceItems(doc)},
+			{Heading: "Actions", Items: []string{"Verify any metric warnings with source data before using them.", "Add bullet source/verified fields for high-stakes claims."}},
+		},
 	}
 }
 
@@ -111,10 +112,10 @@ func bulletsReport(doc *cv.CV, warnings []cv.Warning) *Report {
 	return &Report{
 		Name:  doc.Name,
 		Title: "Bullets",
-		Sections: []Section{{
-			Heading: "Warnings",
-			Items:   warningItems(warnings, "empty_bullet", "long_bullet", "duplicate_bullet"),
-		}},
+		Sections: []Section{
+			{Heading: "Warnings", Items: warningItems(warnings, "empty_bullet", "long_bullet", "duplicate_bullet")},
+			{Heading: "Actions", Items: []string{"Remove empty bullets.", "Split bullets longer than 45 words.", "Merge or delete duplicate bullets."}},
+		},
 	}
 }
 
@@ -122,10 +123,10 @@ func atsReport(doc *cv.CV, warnings []cv.Warning) *Report {
 	return &Report{
 		Name:  doc.Name,
 		Title: "ATS",
-		Sections: []Section{{
-			Heading: "Warnings",
-			Items:   warningItems(warnings, "too_many_skills", "too_many_projects", "missing_link"),
-		}},
+		Sections: []Section{
+			{Heading: "Warnings", Items: warningItems(warnings, "too_many_skills", "too_many_projects", "missing_link")},
+			{Heading: "Actions", Items: []string{"Keep section names conventional.", "Prefer plain bullets over visual-only formatting.", "Keep skills focused on target-relevant technologies."}},
+		},
 	}
 }
 
@@ -145,6 +146,7 @@ func targetReport(doc *cv.CV, variant *cv.Variant) *Report {
 			{Heading: "Included Projects", Items: listOrNone(variant.IncludeProjects)},
 			{Heading: "Excluded Projects", Items: listOrNone(variant.ExcludeProjects)},
 			{Heading: "Missing Included Projects", Items: missingIncludedProjects(doc, variant)},
+			{Heading: "Actions", Items: []string{"Check that emphasis keywords are supported by cv.yaml facts.", "Prefer excluding weak projects over adding unsupported claims."}},
 		},
 	}
 }
@@ -159,10 +161,51 @@ func warningItems(warnings []cv.Warning, codes ...string) []string {
 		if !allowed[warning.Code] {
 			continue
 		}
-		items = append(items, fmt.Sprintf("%s at %s: %s", warning.Code, warning.Location, warning.Message))
+		items = append(items, fmt.Sprintf("[%s] %s at %s: %s", severity(warning.Code), warning.Code, warning.Location, warning.Message))
 	}
 	if len(items) == 0 {
-		return []string{"No warnings found."}
+		return []string{"[OK] No warnings found."}
+	}
+	return items
+}
+
+func severity(code string) string {
+	switch code {
+	case "suspicious_metric", "missing_link", "empty_bullet":
+		return "High"
+	case "duplicate_bullet", "long_bullet":
+		return "Medium"
+	default:
+		return "Low"
+	}
+}
+
+func provenanceItems(doc *cv.CV) []string {
+	items := []string{}
+	for i, exp := range doc.Experience {
+		for j, bullet := range exp.Bullets {
+			location := fmt.Sprintf("experience[%d].bullets[%d]", i, j)
+			items = appendProvenanceItem(items, location, bullet)
+		}
+	}
+	for i, project := range doc.Projects {
+		for j, bullet := range project.Bullets {
+			location := fmt.Sprintf("projects[%d].bullets[%d]", i, j)
+			items = appendProvenanceItem(items, location, bullet)
+		}
+	}
+	if len(items) == 0 {
+		return []string{"[OK] All bullets include source and verified provenance, or no bullets exist."}
+	}
+	return items
+}
+
+func appendProvenanceItem(items []string, location string, bullet cv.Bullet) []string {
+	if strings.TrimSpace(bullet.Source) == "" {
+		items = append(items, fmt.Sprintf("[Medium] %s has no source field.", location))
+	}
+	if !bullet.Verified {
+		items = append(items, fmt.Sprintf("[Medium] %s is not marked verified.", location))
 	}
 	return items
 }
@@ -175,11 +218,11 @@ func missingIncludedProjects(doc *cv.CV, variant *cv.Variant) []string {
 	missing := []string{}
 	for _, name := range variant.IncludeProjects {
 		if !projects[name] {
-			missing = append(missing, name)
+			missing = append(missing, fmt.Sprintf("[High] %s", name))
 		}
 	}
 	if len(missing) == 0 {
-		return []string{"No missing included projects."}
+		return []string{"[OK] No missing included projects."}
 	}
 	return missing
 }
