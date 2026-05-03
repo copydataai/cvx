@@ -1,0 +1,28 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\begin{document}
+\begin{center}{\LARGE {{tex .CV.Name}}}\\
+{{tex .CV.Contact.Email}} {{tex .CV.Contact.Location}}\end{center}
+{{range .Sections}}
+{{if eq .Name "summary"}}{{if $.CV.Summary}}\section*{Summary}
+{{tex $.CV.Summary}}
+{{end}}{{end}}
+{{if eq .Name "skills"}}{{if $.CV.Skills}}\section*{Skills}
+{{tex (join $.CV.Skills ", ")}}
+{{end}}{{end}}
+{{if eq .Name "experience"}}{{if $.CV.Experience}}\section*{Experience}
+{{range $.CV.Experience}}\textbf{ {{- tex .Title -}} }, {{tex .Company}} \hfill {{tex .Start}}--{{tex .End}}
+\begin{itemize}
+{{range .Bullets}}\item {{tex .Text}}
+{{end}}\end{itemize}
+{{end}}{{end}}{{end}}
+{{if eq .Name "projects"}}{{if $.CV.Projects}}\section*{Projects}
+{{range $.CV.Projects}}\textbf{ {{- tex .Name -}} } -- {{tex .Description}}
+\begin{itemize}
+{{range .Bullets}}\item {{tex .Text}}
+{{end}}\end{itemize}
+{{end}}{{end}}{{end}}
+{{if eq .Name "education"}}{{if $.CV.Education}}\section*{Education}
+{{range $.CV.Education}}\textbf{ {{- tex .Institution -}} } -- {{tex .Degree}} \hfill {{tex .Start}}--{{tex .End}}
+{{end}}{{end}}{{end}}
+{{end}}\end{document}

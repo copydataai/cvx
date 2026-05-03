@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	texttemplate "text/template"
 	"time"
 
 	"github.com/josesanchez/cvx/internal/cv"
@@ -20,7 +21,7 @@ func Command(args []string) error {
 	variantPath := fs.String("variant", "", "variant YAML path")
 	output := fs.String("output", "", "render output path")
 	format := fs.String("format", "tex", "render format: tex or html")
-	templatePath := fs.String("template", "", "template path for html format")
+	templatePath := fs.String("template", "", "template path for html or tex format")
 	reportPath := fs.String("report", "output/reports/last-render.json", "render report JSON path")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -137,7 +138,10 @@ func defaultOutputPath(format, output string) string {
 func renderBody(doc *cv.CV, sections []string, format, templatePath string) (string, error) {
 	switch format {
 	case "", "tex":
-		return renderTeX(doc, sections), nil
+		if templatePath == "" {
+			templatePath = defaultTeXTemplatePath()
+		}
+		return renderTeXTemplate(doc, sections, templatePath)
 	case "html":
 		if templatePath == "" {
 			templatePath = defaultHTMLTemplatePath()
@@ -146,6 +150,18 @@ func renderBody(doc *cv.CV, sections []string, format, templatePath string) (str
 	default:
 		return "", fmt.Errorf("unknown render format %q", format)
 	}
+}
+
+func defaultTeXTemplatePath() string {
+	for _, path := range []string{
+		"templates/tex/minimal.tex.tmpl",
+		"../../templates/tex/minimal.tex.tmpl",
+	} {
+		if _, err := os.Stat(path); err == nil {
+			return path
+		}
+	}
+	return "templates/tex/minimal.tex.tmpl"
 }
 
 func defaultHTMLTemplatePath() string {
@@ -168,6 +184,38 @@ func renderHTML(doc *cv.CV, templatePath string) (string, error) {
 	var b strings.Builder
 	if err := tmpl.Execute(&b, doc); err != nil {
 		return "", fmt.Errorf("execute html template %s: %w", templatePath, err)
+	}
+	return b.String(), nil
+}
+
+type renderModel struct {
+	CV       *cv.CV
+	Sections []sectionModel
+}
+
+type sectionModel struct {
+	Name string
+}
+
+func newRenderModel(doc *cv.CV, sections []string) renderModel {
+	items := make([]sectionModel, 0, len(sections))
+	for _, section := range sections {
+		items = append(items, sectionModel{Name: section})
+	}
+	return renderModel{CV: doc, Sections: items}
+}
+
+func renderTeXTemplate(doc *cv.CV, sections []string, templatePath string) (string, error) {
+	tmpl, err := texttemplate.New(filepath.Base(templatePath)).Funcs(texttemplate.FuncMap{
+		"tex":  tex,
+		"join": strings.Join,
+	}).ParseFiles(templatePath)
+	if err != nil {
+		return "", fmt.Errorf("parse tex template %s: %w", templatePath, err)
+	}
+	var b strings.Builder
+	if err := tmpl.Execute(&b, newRenderModel(doc, sections)); err != nil {
+		return "", fmt.Errorf("execute tex template %s: %w", templatePath, err)
 	}
 	return b.String(), nil
 }
