@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestCommandOnceCreatesHTML(t *testing.T) {
@@ -37,5 +38,26 @@ projects:
 	body := string(data)
 	if !strings.Contains(body, "<html") || !strings.Contains(body, "Person") {
 		t.Fatalf("unexpected html output: %s", body)
+	}
+}
+
+func TestLatestModTime(t *testing.T) {
+	dir := t.TempDir()
+	first := filepath.Join(dir, "first.txt")
+	second := filepath.Join(dir, "second.txt")
+	if err := os.WriteFile(first, []byte("first"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	time.Sleep(10 * time.Millisecond)
+	if err := os.WriteFile(second, []byte("second"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	latest := latestModTime([]string{first, second})
+	info, err := os.Stat(second)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !latest.Equal(info.ModTime()) {
+		t.Fatalf("latestModTime = %v, want %v", latest, info.ModTime())
 	}
 }

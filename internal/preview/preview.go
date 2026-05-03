@@ -20,6 +20,8 @@ type config struct {
 	variant string
 	html    string
 	once    bool
+	watch   bool
+	poll    time.Duration
 }
 
 type rebuildState struct {
@@ -40,6 +42,10 @@ func Command(args []string) error {
 	}
 	if cfg.once {
 		return nil
+	}
+
+	if cfg.watch {
+		go watch(cfg, state)
 	}
 
 	mux := http.NewServeMux()
@@ -63,10 +69,50 @@ func parseFlags(args []string) (config, error) {
 	fs.StringVar(&cfg.variant, "variant", "", "variant YAML path")
 	fs.StringVar(&cfg.html, "html", "output/cv.html", "HTML output path")
 	fs.BoolVar(&cfg.once, "once", false, "rebuild once without serving")
+	fs.BoolVar(&cfg.watch, "watch", true, "poll source files and rebuild when they change")
+	fs.DurationVar(&cfg.poll, "poll", time.Second, "file watch polling interval")
 	if err := fs.Parse(args); err != nil {
 		return config{}, err
 	}
 	return cfg, nil
+}
+
+func watch(cfg config, state *rebuildState) {
+	if cfg.poll <= 0 {
+		cfg.poll = time.Second
+	}
+	ticker := time.NewTicker(cfg.poll)
+	defer ticker.Stop()
+	last := latestModTime(watchPaths(cfg))
+	for range ticker.C {
+		next := latestModTime(watchPaths(cfg))
+		if next.After(last) {
+			_ = rebuild(cfg, state)
+			last = next
+		}
+	}
+}
+
+func watchPaths(cfg config) []string {
+	paths := []string{cfg.input, "templates/html/minimal.html.tmpl", "templates/html/founder.html.tmpl"}
+	if cfg.variant != "" {
+		paths = append(paths, cfg.variant)
+	}
+	return paths
+}
+
+func latestModTime(paths []string) time.Time {
+	var latest time.Time
+	for _, path := range paths {
+		info, err := os.Stat(path)
+		if err != nil || info.IsDir() {
+			continue
+		}
+		if info.ModTime().After(latest) {
+			latest = info.ModTime()
+		}
+	}
+	return latest
 }
 
 func rebuild(cfg config, state *rebuildState) error {
@@ -187,6 +233,7 @@ var dashboardTemplate = template.Must(template.New("dashboard").Parse(`<!doctype
     <div class="status">
       <strong>Rebuild status: {{.Status}}</strong>
       <span>Last run: {{.LastRun}}</span>
+      <span>Watching source files for changes.</span>
       {{if .LastErr}}<span class="error">Last error: {{.LastErr}}</span>{{end}}
     </div>
     <nav>
