@@ -14,6 +14,7 @@ import (
 	"github.com/josesanchez/cvx/internal/render"
 	"github.com/josesanchez/cvx/internal/review"
 	"github.com/josesanchez/cvx/internal/schema"
+	"github.com/josesanchez/cvx/internal/session"
 )
 
 const version = "0.1.0"
@@ -54,6 +55,8 @@ func run(args []string) error {
 		return review.Command(args[1:])
 	case "schema":
 		return schemaCommand(args[1:])
+	case "session":
+		return session.Command(args[1:])
 	case "version":
 		fmt.Println(version)
 		return nil
@@ -106,6 +109,7 @@ Usage:
   cvx review facts|bullets|ats|target [--variant variants/name.yaml]
   cvx schema
   cvx schema check
+  cvx session start|snapshot|verify|report
   cvx version
 `)
 }
@@ -114,6 +118,7 @@ func schemaUsage() {
 	fmt.Print(`Usage:
   cvx schema
   cvx schema check
+  cvx session start|snapshot|verify|report
 
 Writes static JSON Schema files to:
   schema/cv.schema.json
