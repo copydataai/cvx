@@ -1,0 +1,10 @@
+# Default cvx policy guidance. The current policy checker has built-in deterministic rules.
+forbidden_without_approval:
+  - change_name
+  - change_contact
+  - change_education
+  - change_experience_identity
+  - add_experience
+requires_review:
+  - unverified_bullet
+  - missing_bullet_source
