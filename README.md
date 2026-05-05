@@ -142,6 +142,22 @@ cvx review target --variant variants/yc-founder-engineer.yaml
 Write deterministic review reports under `output/reports/`.
 
 ```bash
+cvx policy --before output/previous.json --after output/current.json
+```
+
+Check an agent edit for high-risk factual changes. High-risk changes are blocked unless rerun with `--approve-high` after human approval.
+
+```bash
+cvx session start --goal "Tailor for YC founder engineer"
+cvx session snapshot --label before --variant variants/yc-founder-engineer.yaml
+cvx session snapshot --label after --variant variants/yc-founder-engineer.yaml
+cvx session verify --variant variants/yc-founder-engineer.yaml
+cvx session report
+```
+
+Create an auditable transaction under `.cvx/sessions/`.
+
+```bash
 cvx preview --variant variants/yc-founder-engineer.yaml
 ```
 
@@ -265,3 +281,5 @@ Tagged releases are configured through `.goreleaser.yml` and `.github/workflows/
 The CLI should remain a small deterministic kernel.
 
 Prefer files and conventions when agents can operate safely. Add CLI behavior only when deterministic checking, normalization, rendering, or reporting is needed.
+
+See [docs/agent-unique.md](docs/agent-unique.md) for the transaction, policy, benchmark, and multi-agent workflow direction.

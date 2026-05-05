@@ -98,6 +98,18 @@ To create snapshots for diffing:
 cvx normalize --variant variants/yc-founder-engineer.yaml --output output/current.json
 ```
 
+For auditable agent transactions:
+
+```bash
+cvx session start --goal "..."
+cvx session snapshot --label before --variant variants/yc-founder-engineer.yaml
+cvx session snapshot --label after --variant variants/yc-founder-engineer.yaml
+cvx session verify --variant variants/yc-founder-engineer.yaml
+cvx session report
+```
+
+Use `cvx policy --before ... --after ...` to block high-risk factual changes unless the human approves them.
+
 When editor or agent schema files are needed:
 
 ```bash
@@ -120,6 +132,8 @@ Validation:
 - cvx diff: pass/fail, if used
 - cvx schema: pass/fail, if used
 - cvx review: pass/fail, if used
+- cvx policy: pass/fail, if used
+- cvx session verify: pass/fail, if used
 
 Notes:
 - ...
