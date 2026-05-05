@@ -16,6 +16,7 @@ const bulletSchema = `{
       "properties": {
         "text": {"type": "string"},
         "source": {"type": "string"},
+        "sources": {"type": "array", "items": {"type": "string"}},
         "verified": {"type": "boolean"}
       }
     }
@@ -51,6 +52,7 @@ const cvSchema = `{
         }
       }
     },
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
     "summary": {"type": "string"},
     "skills": {"type": "array", "items": {"type": "string"}},
     "experience": {
@@ -101,7 +103,19 @@ const cvSchema = `{
     }
   },
   "$defs": {
-    "bullet": ` + bulletSchema + `
+    "bullet": ` + bulletSchema + `,
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"type": "string"},
+        "label": {"type": "string"},
+        "url": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    }
   }
 }
 `

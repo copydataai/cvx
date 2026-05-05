@@ -8,6 +8,13 @@ links:
     url: https://github.com/jordanvale
   - label: Portfolio
     url: https://jordan.example.com
+sources:
+  - id: human-interview-notes
+    type: human
+    label: Human-provided work history
+  - id: repo-cvx
+    type: repository
+    url: https://github.com/jordanvale/cvx
 summary: >
   Founder-minded software engineer building local-first tools for service businesses, with hands-on ownership across product discovery, backend systems, and operational workflows.
 skills:
@@ -28,12 +35,18 @@ experience:
     bullets:
       - text: Built scheduling, dispatch, and job-status workflows for cleaning and field-service operators.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
       - text: Interviewed operators to map quoting, route planning, and invoicing pain points before implementation.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
       - text: Designed local-first data flows so teams could keep working during unreliable site connectivity.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
   - company: Northstar Tools
     title: Backend Engineer
@@ -43,9 +56,13 @@ experience:
     bullets:
       - text: Built Go services for customer onboarding, account configuration, and operational reporting.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
       - text: Improved incident debugging by adding structured logs, health checks, and runbook-oriented error messages.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
 projects:
   - name: Routeboard
@@ -54,9 +71,13 @@ projects:
     bullets:
       - text: Implemented offline-safe job planning with conflict-aware sync and operator-friendly status changes.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
       - text: Built a compact HTML interface for fast updates from tablets and low-end laptops.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
   - name: Invoice Review
     description: Review workflow for correcting extracted supplier invoice data before export.
@@ -64,6 +85,8 @@ projects:
     bullets:
       - text: Created validation screens for checking line items, supplier names, and account codes before posting.
         source: human
+        sources:
+          - human-interview-notes
         verified: true
   - name: cvx
     description: Agent-native CV workflow with structured facts, variants, reports, and local rendering.
@@ -71,6 +94,8 @@ projects:
     bullets:
       - text: Built deterministic lint, normalize, render, diff, review, and preview commands for agent workflows.
         source: repository
+        sources:
+          - repo-cvx
         verified: true
 education:
   - institution: Example University

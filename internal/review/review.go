@@ -103,6 +103,7 @@ func factsReport(doc *cv.CV, warnings []cv.Warning) *Report {
 		Sections: []Section{
 			{Heading: "Warnings", Items: warningItems(warnings, "suspicious_metric", "missing_link")},
 			{Heading: "Provenance", Items: provenanceItems(doc)},
+			{Heading: "Source Registry", Items: sourceRegistryItems(doc)},
 			{Heading: "Actions", Items: []string{"Verify any metric warnings with source data before using them.", "Add bullet source/verified fields for high-stakes claims."}},
 		},
 	}
@@ -201,11 +202,44 @@ func provenanceItems(doc *cv.CV) []string {
 }
 
 func appendProvenanceItem(items []string, location string, bullet cv.Bullet) []string {
-	if strings.TrimSpace(bullet.Source) == "" {
+	if strings.TrimSpace(bullet.Source) == "" && len(bullet.Sources) == 0 {
 		items = append(items, fmt.Sprintf("[Medium] %s has no source field.", location))
 	}
 	if !bullet.Verified {
 		items = append(items, fmt.Sprintf("[Medium] %s is not marked verified.", location))
+	}
+	return items
+}
+
+func sourceRegistryItems(doc *cv.CV) []string {
+	registry := map[string]bool{}
+	for _, source := range doc.Sources {
+		if strings.TrimSpace(source.ID) != "" {
+			registry[source.ID] = true
+		}
+	}
+	items := []string{}
+	for i, exp := range doc.Experience {
+		for j, bullet := range exp.Bullets {
+			items = appendSourceReferenceItems(items, fmt.Sprintf("experience[%d].bullets[%d]", i, j), bullet, registry)
+		}
+	}
+	for i, project := range doc.Projects {
+		for j, bullet := range project.Bullets {
+			items = appendSourceReferenceItems(items, fmt.Sprintf("projects[%d].bullets[%d]", i, j), bullet, registry)
+		}
+	}
+	if len(items) == 0 {
+		return []string{"[OK] Bullet source references resolve."}
+	}
+	return items
+}
+
+func appendSourceReferenceItems(items []string, location string, bullet cv.Bullet, registry map[string]bool) []string {
+	for _, id := range bullet.Sources {
+		if !registry[id] {
+			items = append(items, fmt.Sprintf("[High] %s references missing source %q.", location, id))
+		}
 	}
 	return items
 }

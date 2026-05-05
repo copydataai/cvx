@@ -10,6 +10,7 @@ type CV struct {
 	Name       string       `yaml:"name" json:"name"`
 	Contact    Contact      `yaml:"contact" json:"contact"`
 	Links      []Link       `yaml:"links" json:"links"`
+	Sources    []Source     `yaml:"sources" json:"sources,omitempty"`
 	Summary    string       `yaml:"summary" json:"summary"`
 	Skills     []string     `yaml:"skills" json:"skills"`
 	Experience []Experience `yaml:"experience" json:"experience"`
@@ -29,6 +30,14 @@ type Link struct {
 	URL   string `yaml:"url" json:"url"`
 }
 
+type Source struct {
+	ID    string `yaml:"id" json:"id"`
+	Type  string `yaml:"type" json:"type"`
+	Label string `yaml:"label,omitempty" json:"label,omitempty"`
+	URL   string `yaml:"url,omitempty" json:"url,omitempty"`
+	Notes string `yaml:"notes,omitempty" json:"notes,omitempty"`
+}
+
 type Experience struct {
 	Company  string   `yaml:"company" json:"company"`
 	Title    string   `yaml:"title" json:"title"`
@@ -46,9 +55,10 @@ type Project struct {
 }
 
 type Bullet struct {
-	Text     string `yaml:"text" json:"text"`
-	Source   string `yaml:"source,omitempty" json:"source,omitempty"`
-	Verified bool   `yaml:"verified,omitempty" json:"verified,omitempty"`
+	Text     string   `yaml:"text" json:"text"`
+	Source   string   `yaml:"source,omitempty" json:"source,omitempty"`
+	Sources  []string `yaml:"sources,omitempty" json:"sources,omitempty"`
+	Verified bool     `yaml:"verified,omitempty" json:"verified,omitempty"`
 }
 
 func (b *Bullet) UnmarshalYAML(value *yaml.Node) error {
